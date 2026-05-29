@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Art | Aesthete</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#be8f61",
+                    "secondary": "#536257",
+                    "on-secondary-fixed": "#111e16",
+                    "primary-container": "#2d312e",
+                    "on-error": "#ffffff",
+                    "primary-fixed-dim": "#c4c7c3",
+                    "on-primary-container": "#959995",
+                    "tertiary-container": "#482904",
+                    "on-secondary-container": "#59685d",
+                    "outline-variant": "#c4c7c3",
+                    "surface-bright": "#fbf9f4",
+                    "secondary-container": "#d6e7d9",
+                    "on-tertiary-fixed-variant": "#623f18",
+                    "on-tertiary-fixed": "#2c1600",
+                    "inverse-surface": "#30312e",
+                    "surface-variant": "#e4e2dd",
+                    "primary-fixed": "#e0e3df",
+                    "secondary-fixed-dim": "#bacbbe",
+                    "surface-container-low": "#f5f3ee",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed-dim": "#f0bd8b",
+                    "secondary-fixed": "#d6e7d9",
+                    "surface-container-high": "#eae8e3",
+                    "on-surface": "#1b1c19",
+                    "on-surface-variant": "#444844",
+                    "outline": "#747874",
+                    "on-tertiary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "inverse-on-surface": "#f2f1ec",
+                    "surface-tint": "#5b5f5c",
+                    "on-secondary": "#ffffff",
+                    "background": "#fbf9f4",
+                    "surface": "#fbf9f4",
+                    "inverse-primary": "#c4c7c3",
+                    "tertiary-fixed": "#ffdcbd",
+                    "error": "#ba1a1a",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed-variant": "#444844",
+                    "tertiary": "#2c1600",
+                    "on-secondary-fixed-variant": "#3b4a40",
+                    "on-background": "#1b1c19",
+                    "on-primary-fixed": "#191c1a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "section-gap-lg": "8rem",
+                    "gutter": "2rem",
+                    "gallery-gap": "1rem",
+                    "article-max": "720px",
+                    "container-max": "1120px",
+                    "section-gap-sm": "4rem"
+            },
+            "fontFamily": {
+                    "headline-md": ["Libre Caslon Text"],
+                    "label-sm": ["Inter"],
+                    "caption": ["Inter"],
+                    "article-body": ["Inter"],
+                    "display-lg": ["Libre Caslon Text"],
+                    "display-lg-mobile": ["Libre Caslon Text"]
+            },
+            "fontSize": {
+                    "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                    "caption": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "article-body": ["18px", {"lineHeight": "1.75", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                    "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400"}],
+                    "display-lg-mobile": ["40px", {"lineHeight": "1.2", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .gallery-item {
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease;
+        }
+        .gallery-container:hover .gallery-item:not(:hover) {
+            transform: scale(0.96);
+            opacity: 0.6;
+        }
+        .gallery-item:hover {
+            transform: scale(1.02);
+            z-index: 10;
+        }
+        .watermark {
+            pointer-events: none;
+            user-select: none;
+            z-index: 0;
+        }
+        body {
+            background-color: #fbf9f4;
+            overflow-x: hidden;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-article-body">
+<!-- Subtle Watermark -->
+<div class="watermark fixed top-1/4 -right-12 text-[30rem] font-headline-md text-primary/[0.03] italic leading-none">
+        艺
+    </div>
+<!-- TopNavBar -->
+<nav class="w-full top-0 left-0 bg-surface dark:bg-surface sticky z-50">
+<div class="flex justify-between items-center w-full px-gutter py-8 max-w-container-max mx-auto">
+<a class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary dark:text-on-surface italic cursor-pointer opacity-90 hover:opacity-100 transition-colors" href="index.html">
+                Aesthete
+            </a>
+<div class="hidden md:flex items-center gap-12">
+<a class="font-label-sm text-label-sm tracking-widest text-primary dark:text-on-surface italic font-medium cursor-pointer opacity-90 hover:opacity-100 transition-colors" href="gallery.html">Art</a>
+<a class="font-label-sm text-label-sm tracking-widest text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-on-surface transition-colors duration-300 cursor-pointer opacity-90 hover:opacity-100" href="essays.html">Writing</a>
+<a class="font-label-sm text-label-sm tracking-widest text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-on-surface transition-colors duration-300 cursor-pointer opacity-90 hover:opacity-100" href="about.html">About</a>
+<a class="font-label-sm text-label-sm tracking-widest text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-on-surface transition-colors duration-300 cursor-pointer opacity-90 hover:opacity-100" href="explore.html">Archive</a>
+</div>
+<button class="md:hidden">
+<span class="material-symbols-outlined text-primary">menu</span>
+</button>
+</div>
+</nav>
+<main class="relative z-10">
+<!-- Title Section -->
+<section class="max-w-container-max mx-auto px-gutter pt-24 pb-section-gap-sm text-center">
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg mb-6">Artistic Observations</h1>
+<p class="font-headline-md text-headline-md max-w-article-max mx-auto text-on-surface-variant italic">
+                A curation of silence and stillness. Where the brush meets the void and the lens captures the unseen rhythm of the mundane.
+            </p>
+</section>
+<!-- Gallery Grid -->
+<section class="max-w-container-max mx-auto px-gutter pb-section-gap-lg">
+<div class="gallery-container grid grid-cols-1 md:grid-cols-3 gap-gallery-gap">
+<!-- Gallery Item 1: Large Vertical -->
+<div class="gallery-item md:row-span-2 group">
+<div class="relative overflow-hidden aspect-[3/4] mb-3">
+<img class="w-full h-full object-cover" data-alt="A minimalist ink wash painting depicting a single, gnarled pine tree clinging to a misty mountain peak..." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYee5CLn7TZkeFGFcYRbrF0tqcxj3XbtICcr7d8N8ZoMomJuvQ3xh00lxqFK-VmtIb2pCPZVKjlBFCx7RNDIKKpwfI42F9X8YHt-MYubqylp7FpTuzYLoJ7Dl4K_ArGILFM9FRFBZySA4Fq0Vjm-nlyC-M6kSPQcL9s0HQkzKEnHUhNEc1MT1sitS3co7upbuSs06wmEkM_mohRzSKJOLMAB1qTIGOrk5fy8u-Pux_2SWw1tOCaNSQv7IXhFPpRiISTzhP6J1z-w"/>
+</div>
+<div class="text-left px-2">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant block mb-1">Observation 01</span>
+<h3 class="font-caption text-caption italic">The Solitary Reach</h3>
+</div>
+</div>
+<!-- Gallery Item 2: Landscape -->
+<div class="gallery-item group">
+<div class="relative overflow-hidden aspect-[4/3] mb-3">
+<img class="w-full h-full object-cover" data-alt="A high-contrast minimalist photograph of a single white chair..." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuQX1Upv1dx_UXYzXmv1pjwGVLcGDThgkCz_BpmgIk8fjPGqxRT04ZqKL9BVhimF-qWq9QHD5JY1pCScJLozRivT9I9k5z2InBnIhjTUjgc26Ddn-BxRjFk4FQPpt7GEYAVbop1FE5CtHJuQry6wvHGjpPwOvhS5wW2RevU-qUQLSRLrebOZYhaigS4SgvqVnbZzeyqMec3ysJa3-UbC9y_wnSC9sK5a0w4ilRfxaWuSzz6viH90zp--eKMtlxJSJ4F1yFmXEBPA"/>
+</div>
+<div class="text-left px-2">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant block mb-1">Observation 02</span>
+<h3 class="font-caption text-caption italic">Internal Geometry</h3>
+</div>
+</div>
+<!-- Gallery Item 3: Square -->
+<div class="gallery-item group">
+<div class="relative overflow-hidden aspect-square mb-3">
+<img class="w-full h-full object-cover" data-alt="An abstract ink painting showing fluid, sweeping black strokes..." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTiLsbHzpwX2J7APrGz8kNpcR86fu6MHglf3HYXbsyRBJ9R_E6BjTgQD8xur8QW4cOPC6_97usDXjRBnaUp9Ys9MYDQuZmshpQ-IbbUA2XHx3o72NgU4mYYYjw_adorKMcWG3q64vRvRkkqJl56DNN8-gA5Hx22urbTNIkYewcEmsF1DRD0GivmM1zbtGcy5nTXbT2CHWzUkIFvhljjJs80tmVITPZlekL96zL3x3F9qt1-ycgCFzgKllVOpPsuHy_GGhdDVX83g"/>
+</div>
+<div class="text-left px-2">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant block mb-1">Observation 03</span>
+<h3 class="font-caption text-caption italic">Fluidity in Rest</h3>
+</div>
+</div>
+<!-- Gallery Item 4: Wide Portrait -->
+<div class="gallery-item group">
+<div class="relative overflow-hidden aspect-[4/5] mb-3">
+<img class="w-full h-full object-cover" data-alt="A serene landscape photograph of a calm lake at dawn..." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeU4DJCbILUVqnG9JlET_2R0krI4N-B33WVQ42r9RKcY9D6qYAaFtbKXhI7pV-HG9dIv2awIcd9E1g6e8G2j-E8NVR1OR-Hiiv_YLnoriBHojLRwyveEcZJCqiQlw5NeraSLm4ZL8Nr25gy61iU8SVaRJWd5Uq3WUOd7okAvtWzzZY1RGj1-THGkQeuGCUZKcoAVZnD9IVCHvzgQ2o0Qqk3JjctcDVupfcU_jbgFkZlyZyVfo49ckJh1QV7fR3A9P9DLtDB4cKpA"/>
+</div>
+<div class="text-left px-2">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant block mb-1">Observation 04</span>
+<h3 class="font-caption text-caption italic">The Silent Pier</h3>
+</div>
+</div>
+<!-- Gallery Item 5: Small Detail -->
+<div class="gallery-item group">
+<div class="relative overflow-hidden aspect-square mb-3">
+<img class="w-full h-full object-cover" data-alt="A close-up photograph of a dried botanical leaf..." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOfZKzr5p6JFNg9F51pZE--a_lczUtKwHkDZxjj0XeHmWoLoA7mm5sEJHhYt2UeIPM1akLxfxPicOIu2vZYbi3T25K-sbEU0SKhsBMbTgS-IgjRg19oSpjNBWjZdklg6_xswdG-LfcP5UPRFkCI98KTJfZ_OcNDWotPxybIVKEhP_NP9pWQAyNha6PhbOhgTHbzqWApJ005pPkS4i6Hvn_U1DxdSyXJ5-QFjVOKrReFgRx95qwnfYnyK6gIgIwLniNYa52pDZ6wg"/>
+</div>
+<div class="text-left px-2">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant block mb-1">Observation 05</span>
+<h3 class="font-caption text-caption italic">Ephemeral Structure</h3>
+</div>
+</div>
+</div>
+</section>
+<!-- Editorial Callout -->
+<section class="bg-surface-container py-section-gap-sm mb-section-gap-lg">
+<div class="max-w-article-max mx-auto px-gutter text-center">
+<p class="font-label-sm text-label-sm tracking-[0.2em] text-secondary mb-8 uppercase">A Curator's Note</p>
+<blockquote class="font-display-lg text-display-lg-mobile md:text-headline-md italic text-primary leading-relaxed mb-8">
+                    "Art is not what you see, but what you make others see through the absence of the unnecessary."
+                </blockquote>
+<div class="h-12 w-px bg-primary/20 mx-auto"></div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-primary/10 bg-surface dark:bg-surface">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-gutter py-section-gap-sm max-w-container-max mx-auto gap-4">
+<div class="flex flex-col items-center md:items-start gap-2">
+<span class="font-display-lg text-display-lg-mobile text-primary dark:text-on-surface">Aesthete</span>
+<p class="font-caption text-caption text-on-surface-variant dark:text-outline">© 2024 Aesthete. All rights reserved.</p>
+</div>
+<div class="flex items-center gap-8">
+<a class="font-caption text-caption text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-on-surface transition-colors" href="essays.html">Journal</a>
+<a class="font-caption text-caption text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-on-surface transition-colors" href="about.html">Contact</a>
+<a class="font-caption text-caption text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-on-surface transition-colors" href="#">Terms</a>
+</div>
+</div>
+</footer>
+<script>
+        // Atmospheric fade-in for images
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100');
+                    entry.target.classList.remove('opacity-0', 'translate-y-4');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.gallery-item').forEach(el => {
+            el.classList.add('opacity-0', 'translate-y-4', 'transition-all', 'duration-1000');
+            observer.observe(el);
+        });
+    </script>
+</body></html>

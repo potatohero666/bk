@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Explore Archive | Ethereal Curator</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#e4e2dd",
+                    "primary-fixed": "#e0e3df",
+                    "secondary-container": "#d6e7d9",
+                    "background": "#fbf9f4",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed": "#191c1a",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f5f3ee",
+                    "tertiary-fixed-dim": "#f0bd8b",
+                    "primary-fixed-dim": "#c4c7c3",
+                    "on-tertiary-container": "#be8f61",
+                    "on-secondary-fixed-variant": "#3b4a40",
+                    "inverse-primary": "#c4c7c3",
+                    "surface-tint": "#5b5f5c",
+                    "tertiary": "#2c1600",
+                    "tertiary-fixed": "#ffdcbd",
+                    "error": "#ba1a1a",
+                    "outline": "#747874",
+                    "on-primary": "#ffffff",
+                    "primary": "#181c19",
+                    "outline-variant": "#c4c7c3",
+                    "on-primary-fixed-variant": "#444844",
+                    "on-secondary-container": "#59685d",
+                    "on-tertiary-fixed-variant": "#623f18",
+                    "secondary-fixed": "#d6e7d9",
+                    "inverse-surface": "#30312e",
+                    "on-secondary": "#ffffff",
+                    "on-surface-variant": "#444844",
+                    "on-error": "#ffffff",
+                    "secondary-fixed-dim": "#bacbbe",
+                    "surface-container-highest": "#e4e2dd",
+                    "inverse-on-surface": "#f2f1ec",
+                    "on-background": "#1b1c19",
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#482904",
+                    "surface": "#fbf9f4",
+                    "secondary": "#536257",
+                    "on-tertiary": "#ffffff",
+                    "on-surface": "#1b1c19",
+                    "on-secondary-fixed": "#111e16",
+                    "surface-container-high": "#eae8e3",
+                    "surface-container": "#f0eee9",
+                    "surface-dim": "#dbdad5",
+                    "primary-container": "#2d312e",
+                    "surface-bright": "#fbf9f4",
+                    "on-primary-container": "#959995",
+                    "on-tertiary-fixed": "#2c1600"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "article-max": "720px",
+                    "section-gap-sm": "4rem",
+                    "gallery-gap": "1rem",
+                    "gutter": "2rem",
+                    "section-gap-lg": "8rem",
+                    "container-max": "1120px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Libre Caslon Text"],
+                    "article-body": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "caption": ["Inter"],
+                    "display-lg-mobile": ["Libre Caslon Text"],
+                    "display-lg": ["Libre Caslon Text"]
+            },
+            "fontSize": {
+                    "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                    "article-body": ["18px", {"lineHeight": "1.75", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                    "caption": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "display-lg-mobile": ["40px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                    "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #fbf9f4;
+            color: #181c19;
+            overflow-x: hidden;
+        }
+        .archive-watermark {
+            position: fixed;
+            top: -10%;
+            left: -15%;
+            font-size: 80vh;
+            color: #181c19;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+            font-family: serif;
+            user-select: none;
+        }
+        .input-underline {
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            border-bottom: 1px solid rgba(24, 28, 25, 0.15);
+            background: transparent !important;
+        }
+        .input-underline:focus {
+            outline: none;
+            box-shadow: none;
+            border-bottom-color: #536257; /* Sage Green */
+        }
+        .fade-transition {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+    </style>
+</head>
+<body class="font-article-body text-article-body bg-background">
+<!-- Decorative Character -->
+<div class="archive-watermark">藏</div>
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md">
+<div class="flex justify-between items-center max-w-container-max mx-auto px-gutter py-8">
+<a class="text-headline-md font-headline-md italic tracking-widest text-primary" href="index.html">Aesthete</a>
+<div class="hidden md:flex items-center gap-12">
+<a class="text-on-surface-variant font-label-sm uppercase tracking-widest hover:text-primary transition-colors duration-300" href="gallery.html">Art</a>
+<a class="text-on-surface-variant font-label-sm uppercase tracking-widest hover:text-primary transition-colors duration-300" href="essays.html">Writing</a>
+<a class="text-primary italic font-headline-md hover:text-primary transition-colors duration-300" href="explore.html">Archive</a>
+<a class="text-on-surface-variant font-label-sm uppercase tracking-widest hover:text-primary transition-colors duration-300" href="about.html">About</a>
+<div class="flex items-center ml-4">
+<span class="material-symbols-outlined text-primary cursor-pointer" data-icon="menu">menu</span>
+</div>
+</div>
+<!-- Mobile Menu Toggle -->
+<div class="md:hidden">
+<span class="material-symbols-outlined text-primary" data-icon="menu">menu</span>
+</div>
+</div>
+</nav>
+
+<!-- Main Content Area -->
+<main class="relative z-10 pt-48 pb-section-gap-lg px-gutter max-w-article-max mx-auto">
+<!-- Page Header -->
+<header class="mb-12">
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg mb-4">Explore</h1>
+<p class="text-on-surface-variant italic font-headline-md opacity-70">A chronological repository of curated thought and visual expression.</p>
+</header>
+
+<!-- Search Bar Component -->
+<div class="mb-16">
+<div class="group relative flex items-center pb-2">
+<span class="material-symbols-outlined text-on-surface-variant mr-3">search</span>
+<input id="search-input" class="w-full input-underline py-4 font-article-body text-article-body placeholder:italic placeholder:opacity-40" placeholder="Type here to search the archive..." type="text"/>
+</div>
+</div>
+
+<!-- ==================== CONTAINER A: CHRONOLOGICAL TIMELINE ==================== -->
+<div id="timeline-container" class="fade-transition opacity-100">
+<!-- Year Section: 2024 -->
+<section class="mb-16">
+<div class="flex items-baseline gap-4 mb-8">
+<h2 class="font-headline-md text-headline-md text-primary">2024</h2>
+<div class="h-px flex-grow bg-primary/10"></div>
+</div>
+<!-- Month Group: October -->
+<div class="mb-12">
+<h3 class="font-label-sm text-label-sm uppercase tracking-widest text-secondary mb-6">October</h3>
+<div class="space-y-10">
+<!-- Entry -->
+<a href="essay-detail.html" class="group flex flex-col md:flex-row md:items-baseline gap-2 md:gap-8 cursor-pointer block">
+<span class="font-label-sm text-label-sm text-on-surface-variant w-16 shrink-0">14 Oct</span>
+<div class="flex-grow">
+<h4 class="font-headline-md text-2xl text-primary group-hover:italic transition-all duration-300">The Silence of Stone</h4>
+<p class="text-on-surface-variant text-caption mt-1 opacity-80 group-hover:opacity-100 transition-opacity">A study on the brutalist aesthetic and the permanence of form in a digital era.</p>
+</div>
+<span class="hidden md:block material-symbols-outlined text-primary/20 group-hover:text-primary transition-colors" data-icon="north_east">north_east</span>
+</a>
+<!-- Entry -->
+<a href="gallery.html" class="group flex flex-col md:flex-row md:items-baseline gap-2 md:gap-8 cursor-pointer block">
+<span class="font-label-sm text-label-sm text-on-surface-variant w-16 shrink-0">02 Oct</span>
+<div class="flex-grow">
+<h4 class="font-headline-md text-2xl text-primary group-hover:italic transition-all duration-300">Gallery: Whispers of the Loom</h4>
+<p class="text-on-surface-variant text-caption mt-1 opacity-80 group-hover:opacity-100 transition-opacity">A photographic series capturing the intricate dance of light across ancient textiles.</p>
+</div>
+<span class="hidden md:block material-symbols-outlined text-primary/20 group-hover:text-primary transition-colors" data-icon="north_east">north_east</span>
+</a>
+</div>
+</div>
+<!-- Month Group: September -->
+<div class="mb-12">
+<h3 class="font-label-sm text-label-sm uppercase tracking-widest text-secondary mb-6">September</h3>
+<div class="space-y-10">
+<a href="essay-detail.html" class="group flex flex-col md:flex-row md:items-baseline gap-2 md:gap-8 cursor-pointer block">
+<span class="font-label-sm text-label-sm text-on-surface-variant w-16 shrink-0">21 Sep</span>
+<div class="flex-grow">
+<h4 class="font-headline-md text-2xl text-primary group-hover:italic transition-all duration-300">The Ephemerality of the Infinite Scroll</h4>
+<p class="text-on-surface-variant text-caption mt-1 opacity-80 group-hover:opacity-100 transition-opacity">Contemplating the loss of deep attention in modern media consumption.</p>
+</div>
+<span class="hidden md:block material-symbols-outlined text-primary/20 group-hover:text-primary transition-colors" data-icon="north_east">north_east</span>
+</a>
+</div>
+</div>
+</section>
+
+<!-- Year Section: 2023 -->
+<section class="mb-16">
+<div class="flex items-baseline gap-4 mb-8">
+<h2 class="font-headline-md text-headline-md text-primary">2023</h2>
+<div class="h-px flex-grow bg-primary/10"></div>
+</div>
+<!-- Month Group: December -->
+<div class="mb-12">
+<h3 class="font-label-sm text-label-sm uppercase tracking-widest text-secondary mb-6">December</h3>
+<div class="space-y-10">
+<a href="essay-detail.html" class="group flex flex-col md:flex-row md:items-baseline gap-2 md:gap-8 cursor-pointer block">
+<span class="font-label-sm text-label-sm text-on-surface-variant w-16 shrink-0">29 Dec</span>
+<div class="flex-grow">
+<h4 class="font-headline-md text-2xl text-primary group-hover:italic transition-all duration-300">Wintering: A Creative Sabbatical</h4>
+<p class="text-on-surface-variant text-caption mt-1 opacity-80 group-hover:opacity-100 transition-opacity">Reflections on the necessity of dormancy for artistic rejuvenation.</p>
+</div>
+<span class="hidden md:block material-symbols-outlined text-primary/20 group-hover:text-primary transition-colors" data-icon="north_east">north_east</span>
+</a>
+</div>
+</div>
+<!-- Month Group: June -->
+<div class="mb-12">
+<h3 class="font-label-sm text-label-sm uppercase tracking-widest text-secondary mb-6">June</h3>
+<div class="space-y-10">
+<a href="gallery.html" class="group flex flex-col md:flex-row md:items-baseline gap-2 md:gap-8 cursor-pointer block">
+<span class="font-label-sm text-label-sm text-on-surface-variant w-16 shrink-0">15 Jun</span>
+<div class="flex-grow">
+<h4 class="font-headline-md text-2xl text-primary group-hover:italic transition-all duration-300">Chromatics of the Midday Sun</h4>
+<p class="text-on-surface-variant text-caption mt-1 opacity-80 group-hover:opacity-100 transition-opacity">A collection of oil paintings exploring high-contrast landscapes.</p>
+</div>
+<span class="hidden md:block material-symbols-outlined text-primary/20 group-hover:text-primary transition-colors" data-icon="north_east">north_east</span>
+</a>
+<a href="essay-detail.html" class="group flex flex-col md:flex-row md:items-baseline gap-2 md:gap-8 cursor-pointer block">
+<span class="font-label-sm text-label-sm text-on-surface-variant w-16 shrink-0">04 Jun</span>
+<div class="flex-grow">
+<h4 class="font-headline-md text-2xl text-primary group-hover:italic transition-all duration-300">In Praise of the Analog</h4>
+<p class="text-on-surface-variant text-caption mt-1 opacity-80 group-hover:opacity-100 transition-opacity">Why the tactile feedback of paper and ink remains superior to the pixel.</p>
+</div>
+<span class="hidden md:block material-symbols-outlined text-primary/20 group-hover:text-primary transition-colors" data-icon="north_east">north_east</span>
+</a>
+</div>
+</div>
+</section>
+<!-- Load More Interaction -->
+<div class="flex justify-center mt-12">
+<button class="px-12 py-4 bg-primary text-on-primary font-label-sm uppercase tracking-widest hover:bg-primary/90 transition-all duration-300 group flex items-center gap-2">
+            Reveal Further Archive
+            <span class="material-symbols-outlined text-[18px] group-hover:translate-y-0.5 transition-transform" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+</div>
+
+<!-- ==================== CONTAINER B: SEARCH RESULTS ==================== -->
+<div id="results-container" class="fade-transition hidden opacity-0">
+<div class="mb-12">
+<p class="font-label-sm text-label-sm uppercase tracking-[0.2em] text-on-surface-variant mb-2">Search results for:</p>
+<h2 id="search-query-highlight" class="font-display-lg text-3xl md:text-5xl italic text-primary"></h2>
+<p id="search-results-count" class="font-caption text-caption text-on-surface-variant/70 italic mt-2"></p>
+</div>
+
+<div id="search-results-list" class="space-y-16">
+<!-- Dynamically populated via JS -->
+</div>
+
+<!-- Poetic Empty State -->
+<div id="empty-state" class="hidden flex flex-col items-center justify-center py-24 text-center">
+<span class="material-symbols-outlined text-primary/10 text-6xl mb-6">cloud_off</span>
+<p class="font-headline-md text-headline-md italic mb-4">The archives are silent.</p>
+<p class="font-article-body text-article-body text-on-surface-variant max-w-sm">No whispers of your query were found. Perhaps the wind has carried those thoughts elsewhere.</p>
+<button id="reset-search-btn" class="mt-8 border border-primary/20 px-8 py-3 font-label-sm text-label-sm uppercase tracking-widest hover:bg-primary hover:text-surface transition-all">Reset Exploration</button>
+</div>
+</div>
+</main>
+
+<!-- Footer -->
+<footer class="w-full py-section-gap-sm border-t border-primary/5 mt-24">
+<div class="flex flex-col md:flex-row justify-between items-center max-w-article-max mx-auto px-gutter gap-8">
+<div class="font-headline-md text-headline-md text-primary">Aesthete</div>
+<div class="flex gap-8">
+<a class="text-secondary font-label-sm uppercase tracking-tighter hover:text-primary transition-colors" href="essays.html">Essays</a>
+<a class="text-secondary font-label-sm uppercase tracking-tighter hover:text-primary transition-colors" href="gallery.html">Gallery</a>
+<a class="text-primary font-bold uppercase tracking-tighter" href="explore.html">Archive</a>
+<a class="text-secondary font-label-sm uppercase tracking-tighter hover:text-primary transition-colors" href="about.html">About</a>
+</div>
+<div class="text-secondary font-label-sm text-center md:text-right opacity-60">
+            © 2024 Ethereal Curator. All rights reserved.
+        </div>
+</div>
+</footer>
+
+<script>
+    // Pure Frontend Mock Data for Searching
+    const archiveData = [
+        {
+            title: "The Silence of Stone",
+            date: "October 14, 2024",
+            desc: "A study on the brutalist aesthetic and the permanence of form in a digital era.",
+            type: "Essay",
+            link: "essay-detail.html"
+        },
+        {
+            title: "Gallery: Whispers of the Loom",
+            date: "October 02, 2024",
+            desc: "A photographic series capturing the intricate dance of light across ancient textiles.",
+            type: "Visual Art",
+            link: "gallery.html"
+        },
+        {
+            title: "The Ephemerality of the Infinite Scroll",
+            date: "September 21, 2024",
+            desc: "Contemplating the loss of deep attention in modern media consumption.",
+            type: "Essay",
+            link: "essay-detail.html"
+        },
+        {
+            title: "Wintering: A Creative Sabbatical",
+            date: "December 29, 2023",
+            desc: "Reflections on the necessity of dormancy for artistic rejuvenation.",
+            type: "Essay",
+            link: "essay-detail.html"
+        },
+        {
+            title: "Chromatics of the Midday Sun",
+            date: "June 15, 2023",
+            desc: "A collection of oil paintings exploring high-contrast landscapes.",
+            type: "Visual Art",
+            link: "gallery.html"
+        },
+        {
+            title: "In Praise of the Analog",
+            date: "June 04, 2023",
+            desc: "Why the tactile feedback of paper and ink remains superior to the pixel.",
+            type: "Essay",
+            link: "essay-detail.html"
+        }
+    ];
+
+    const searchInput = document.getElementById('search-input');
+    const timelineContainer = document.getElementById('timeline-container');
+    const resultsContainer = document.getElementById('results-container');
+    const queryHighlight = document.getElementById('search-query-highlight');
+    const countHighlight = document.getElementById('search-results-count');
+    const resultsList = document.getElementById('search-results-list');
+    const emptyState = document.getElementById('empty-state');
+    const resetBtn = document.getElementById('reset-search-btn');
+
+    searchInput.addEventListener('input', function() {
+        const val = this.value.trim().toLowerCase();
+        
+        if (val === '') {
+            // Restore Timeline
+            resultsContainer.classList.add('hidden');
+            resultsContainer.classList.remove('opacity-100');
+            resultsContainer.classList.add('opacity-0');
+            
+            timelineContainer.classList.remove('hidden');
+            setTimeout(() => {
+                timelineContainer.classList.add('opacity-100');
+                timelineContainer.classList.remove('opacity-0');
+            }, 50);
+        } else {
+            // Filter Data
+            const matches = archiveData.filter(item => 
+                item.title.toLowerCase().includes(val) || 
+                item.desc.toLowerCase().includes(val)
+            );
+            
+            // Hide timeline
+            timelineContainer.classList.add('opacity-0');
+            timelineContainer.classList.remove('opacity-100');
+            timelineContainer.classList.add('hidden');
+            
+            // Setup results container
+            resultsContainer.classList.remove('hidden');
+            setTimeout(() => {
+                resultsContainer.classList.add('opacity-100');
+                resultsContainer.classList.remove('opacity-0');
+            }, 50);
+            
+            queryHighlight.textContent = `'${this.value}'`;
+            
+            if (matches.length === 0) {
+                resultsList.innerHTML = '';
+                countHighlight.textContent = "0 entries found within the archive";
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                countHighlight.textContent = `${matches.length} entries found within the archive`;
+                
+                resultsList.innerHTML = matches.map(item => `
+                    <a href="${item.link}" class="group block cursor-pointer">
+                        <div class="flex flex-col md:flex-row md:items-baseline justify-between mb-2">
+                            <h3 class="font-headline-md text-2xl text-primary group-hover:italic transition-all duration-300">${item.title}</h3>
+                            <span class="font-label-sm text-label-sm text-on-surface-variant/60 uppercase">${item.date}</span>
+                        </div>
+                        <p class="font-article-body text-article-body text-on-surface-variant leading-relaxed opacity-80 group-hover:opacity-100 transition-opacity">${item.desc}</p>
+                        <div class="mt-4 h-[1px] w-full bg-primary opacity-5"></div>
+                    </a>
+                `).join('');
+            }
+        }
+    });
+
+    resetBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchInput.dispatchEvent(new Event('input'));
+    });
+
+    // Atmospheric scroll effect for watermark
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const watermark = document.querySelector('.archive-watermark');
+        watermark.style.transform = `translateY(${scrolled * 0.15}px)`;
+    });
+</script>
+</body></html>

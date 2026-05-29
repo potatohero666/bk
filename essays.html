@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aesthete | Ink &amp; Insights</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Micro-interactions & Motion */
+        @media (prefers-reduced-motion: no-preference) {
+            .reveal-header {
+                animation: revealUp 1.2s var(--motion-ease) forwards;
+                opacity: 0;
+            }
+            .reveal-subtitle {
+                animation: revealUp 1.2s var(--motion-ease) 0.2s forwards;
+                opacity: 0;
+            }
+            .reveal-item {
+                animation: revealUp 1s var(--motion-ease) forwards;
+                opacity: 0;
+            }
+            
+            .bg-char-entrance {
+                animation: charEntrance 2s var(--motion-ease) forwards, 
+                           charBreathe 8s ease-in-out 2s infinite alternate;
+                opacity: 0;
+                transform-origin: center;
+            }
+
+            @keyframes revealUp {
+                from { opacity: 0; transform: translateY(30px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            @keyframes charEntrance {
+                from { opacity: 0; transform: translate(-25%, -25%) scale(0.95); }
+                to { opacity: 0.03; transform: translate(-25%, -25%) scale(1); }
+            }
+
+            @keyframes charBreathe {
+                from { opacity: 0.02; }
+                to { opacity: 0.04; }
+            }
+
+            .writing-item .decorative-char {
+                transition: transform 0.6s var(--motion-ease), opacity 0.6s var(--motion-ease);
+            }
+            .writing-item:hover .decorative-char {
+                transform: scale(1.05);
+                opacity: 0.1;
+            }
+            
+            .writing-item:hover .arrow-icon {
+                transform: translateX(6px);
+            }
+            .arrow-icon {
+                transition: transform 0.4s var(--motion-ease);
+            }
+        }
+
+        .character-bg {
+            user-select: none;
+            pointer-events: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#fbf9f4",
+                        "on-tertiary": "#ffffff",
+                        "outline": "#747874",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#623f18",
+                        "on-surface-variant": "#444844",
+                        "tertiary-fixed": "#ffdcbd",
+                        "tertiary-fixed-dim": "#f0bd8b",
+                        "surface-container-high": "#eae8e3",
+                        "surface-dim": "#dbdad5",
+                        "primary": "#181c19",
+                        "on-tertiary-fixed": "#2c1600",
+                        "inverse-primary": "#c4c7c3",
+                        "outline-variant": "#c4c7c3",
+                        "on-surface": "#1b1c19",
+                        "surface-bright": "#fbf9f4",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#d6e7d9",
+                        "on-primary-container": "#959995",
+                        "on-secondary-fixed": "#111e16",
+                        "surface-container-low": "#f5f3ee",
+                        "inverse-surface": "#30312e",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#444844",
+                        "on-background": "#1b1c19",
+                        "surface-container": "#f0eee9",
+                        "secondary-container": "#d6e7d9",
+                        "inverse-on-surface": "#f2f1ec",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e4e2dd",
+                        "tertiary": "#2c1600",
+                        "primary-fixed": "#e0e3df",
+                        "tertiary-container": "#482904",
+                        "on-tertiary-container": "#be8f61",
+                        "secondary": "#536257",
+                        "primary-fixed-dim": "#c4c7c3",
+                        "on-secondary-fixed-variant": "#3b4a40",
+                        "on-primary-fixed": "#191c1a",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#5b5f5c",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#2d312e",
+                        "on-secondary-container": "#59685d",
+                        "surface-variant": "#e4e2dd",
+                        "secondary-fixed-dim": "#bacbbe",
+                        "background": "#fbf9f4"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "article-max": "720px",
+                        "gallery-gap": "1rem",
+                        "section-gap-sm": "4rem",
+                        "section-gap-lg": "8rem",
+                        "container-max": "1120px",
+                        "gutter": "2rem"
+                    },
+                    "fontFamily": {
+                        "caption": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Libre Caslon Text"],
+                        "display-lg": ["Libre Caslon Text"],
+                        "article-body": ["Inter"],
+                        "display-lg-mobile": ["Libre Caslon Text"]
+                    },
+                    "fontSize": {
+                        "caption": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "label-sm": ["12px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "600" }],
+                        "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "400" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400" }],
+                        "article-body": ["18px", { "lineHeight": "1.75", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "1.2", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface min-h-screen relative overflow-x-hidden selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Background Decoration -->
+<div class="fixed top-0 left-0 -translate-x-1/4 -translate-y-1/4 text-[614px] font-serif opacity-[0.03] select-none pointer-events-none z-0 bg-char-entrance">
+        文
+    </div>
+<!-- Navigation -->
+<nav class="w-full top-0 left-0 bg-surface dark:bg-surface relative z-50">
+<div class="flex justify-between items-center w-full px-gutter py-8 max-w-container-max mx-auto">
+<a class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary dark:text-on-surface italic" href="index.html">Aesthete</a>
+<div class="hidden md:flex items-center gap-12 font-label-sm text-label-sm tracking-widest">
+<a class="text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-on-surface transition-colors cursor-pointer opacity-90 hover:opacity-100" href="gallery.html">Art</a>
+<a class="text-primary dark:text-on-surface italic font-medium cursor-pointer opacity-90 hover:opacity-100" href="essays.html">Writing</a>
+<a class="text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-on-surface transition-colors cursor-pointer opacity-90 hover:opacity-100" href="about.html">About</a>
+<a class="text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-on-surface transition-colors cursor-pointer opacity-90 hover:opacity-100" href="explore.html">Archive</a>
+</div>
+<button class="md:hidden flex items-center justify-center p-2">
+<span class="material-symbols-outlined text-primary">menu</span>
+</button>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="relative z-10 px-gutter pt-12 md:pt-20 pb-section-gap-lg max-w-article-max mx-auto">
+<!-- Header -->
+<header class="mb-24 text-center md:text-left">
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-4 italic reveal-header">Ink &amp; Insights</h1>
+<p class="font-article-body text-on-surface-variant max-w-md mx-auto md:mx-0 reveal-subtitle">Reflections on the intersection of visual silence and the written word.</p>
+</header>
+<!-- Essay List -->
+<section class="flex flex-col gap-24">
+<!-- Essay 1 -->
+<article class="writing-item group flex flex-col md:flex-row gap-8 items-start reveal-item" style="animation-delay: 0.4s;">
+<div class="hidden md:block text-[80px] font-serif text-primary/5 select-none leading-none pt-2 shrink-0 decorative-char">墨</div>
+<div class="flex-grow">
+<div class="mb-4">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest block mb-2">2024.11.15</span>
+<h2 class="font-headline-md text-headline-md text-primary group-hover:italic transition-all duration-300">
+<a href="essay-detail.html">The Weight of Ink: Silence in Minimalist Expression</a>
+</h2>
+</div>
+<p class="font-article-body text-on-surface-variant mb-6 leading-relaxed">
+                        An exploration into how the void on a canvas dictates the resonance of a single brushstroke, and why we fear the empty page.
+                    </p>
+<a class="inline-flex items-center gap-2 font-label-sm text-label-sm text-primary tracking-widest" href="essay-detail.html">
+                        Read Essay
+                        <span class="material-symbols-outlined text-sm arrow-icon">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- Essay 2 -->
+<article class="writing-item group flex flex-col md:flex-row gap-8 items-start reveal-item" style="animation-delay: 0.6s;">
+<div class="hidden md:block text-[80px] font-serif text-primary/5 select-none leading-none pt-2 shrink-0 decorative-char">山</div>
+<div class="flex-grow">
+<div class="mb-4">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest block mb-2">2024.10.28</span>
+<h2 class="font-headline-md text-headline-md text-primary group-hover:italic transition-all duration-300">
+<a href="essay-detail.html">Topography of Thought: Mapping Creative Journeys</a>
+</h2>
+</div>
+<p class="font-article-body text-on-surface-variant mb-6 leading-relaxed">
+                        Tracing the jagged lines of inspiration from the initial spark to the finished artifact across the peaks of various mediums.
+                    </p>
+<a class="inline-flex items-center gap-2 font-label-sm text-label-sm text-primary tracking-widest" href="essay-detail.html">
+                        Read Essay
+                        <span class="material-symbols-outlined text-sm arrow-icon">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- Essay 3 -->
+<article class="writing-item group flex flex-col md:flex-row gap-8 items-start reveal-item" style="animation-delay: 0.8s;">
+<div class="hidden md:block text-[80px] font-serif text-primary/5 select-none leading-none pt-2 shrink-0 decorative-char">曦</div>
+<div class="flex-grow">
+<div class="mb-4">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest block mb-2">2024.09.12</span>
+<h2 class="font-headline-md text-headline-md text-primary group-hover:italic transition-all duration-300">
+<a href="essay-detail.html">The First Light: Morning Rituals of the Mind</a>
+</h2>
+</div>
+<p class="font-article-body text-on-surface-variant mb-6 leading-relaxed">
+                        Why the clarity of dawn provides a unique frequency for deep thinking and the cultivation of intellectual resilience.
+                    </p>
+<a class="inline-flex items-center gap-2 font-label-sm text-label-sm text-primary tracking-widest" href="essay-detail.html">
+                        Read Essay
+                        <span class="material-symbols-outlined text-sm arrow-icon">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- Essay 4 -->
+<article class="writing-item group flex flex-col md:flex-row gap-8 items-start reveal-item" style="animation-delay: 1.0s;">
+<div class="hidden md:block text-[80px] font-serif text-primary/5 select-none leading-none pt-2 shrink-0 decorative-char">月</div>
+<div class="flex-grow">
+<div class="mb-4">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest block mb-2">2024.08.05</span>
+<h2 class="font-headline-md text-headline-md text-primary group-hover:italic transition-all duration-300">
+<a href="essay-detail.html">Nocturnal Elegance: The Beauty of the Unseen</a>
+</h2>
+</div>
+<p class="font-article-body text-on-surface-variant mb-6 leading-relaxed">
+                        Considering the shadows as essential components of design, and how what we hide defines what we choose to show.
+                    </p>
+<a class="inline-flex items-center gap-2 font-label-sm text-label-sm text-primary tracking-widest" href="essay-detail.html">
+                        Read Essay
+                        <span class="material-symbols-outlined text-sm arrow-icon">arrow_forward</span>
+</a>
+</div>
+</article>
+</section>
+<!-- Pagination -->
+<div class="mt-32 flex justify-center border-t border-primary/5 pt-12">
+<nav class="flex items-center gap-8 font-label-sm text-label-sm tracking-widest">
+<span class="text-primary italic">01</span>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">02</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">03</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-2" href="#">
+                    Next <span class="material-symbols-outlined text-xs">chevron_right</span>
+</a>
+</nav>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-primary/10 bg-surface dark:bg-surface relative z-10">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-gutter py-section-gap-sm max-w-container-max mx-auto gap-4">
+<div class="font-display-lg text-display-lg-mobile text-primary dark:text-on-surface">Aesthete</div>
+<div class="flex flex-col md:flex-row items-center gap-8 font-caption text-caption text-secondary dark:text-on-secondary-container">
+<div class="flex gap-8">
+<a class="hover:text-primary dark:hover:text-on-surface transition-colors" href="essays.html">Journal</a>
+<a class="hover:text-primary dark:hover:text-on-surface transition-colors" href="about.html">Contact</a>
+<a class="hover:text-primary dark:hover:text-on-surface transition-colors" href="#">Terms</a>
+</div>
+<div class="text-on-surface-variant dark:text-outline mt-4 md:mt-0">
+                    © 2024 Aesthete. All rights reserved.
+                </div>
+</div>
+</div>
+</footer>
+<script>
+        // Simple parallax for the background character
+        window.addEventListener('scroll', () => {
+            const character = document.querySelector('.bg-char-entrance');
+            if (character) {
+                const scrolled = window.pageYOffset;
+                // Preserve the -25% base transform and add parallax offset
+                character.style.transform = `translate(-25%, calc(-25% + ${scrolled * 0.15}px))`;
+            }
+        });
+    </script>
+</body></html>

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Atelier Workspace | Aesthete</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#f0bd8b",
+                    "secondary": "#536257",
+                    "on-primary": "#ffffff",
+                    "surface-dim": "#dbdad5",
+                    "on-tertiary-fixed": "#2c1600",
+                    "on-tertiary-container": "#be8f61",
+                    "on-primary-fixed-variant": "#444844",
+                    "on-secondary-fixed-variant": "#3b4a40",
+                    "on-error": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "primary-fixed": "#e0e3df",
+                    "surface-tint": "#5b5f5c",
+                    "background": "#fbf9f4",
+                    "surface-container-low": "#f5f3ee",
+                    "on-error-container": "#93000a",
+                    "on-background": "#1b1c19",
+                    "surface-container": "#f0eee9",
+                    "surface": "#fbf9f4",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-container": "#2d312e",
+                    "on-secondary-container": "#59685d",
+                    "on-tertiary-fixed-variant": "#623f18",
+                    "on-secondary-fixed": "#111e16",
+                    "inverse-on-surface": "#f2f1ec",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed": "#191c1a",
+                    "surface-container-high": "#eae8e3",
+                    "tertiary-container": "#482904",
+                    "outline-variant": "#c4c7c3",
+                    "on-secondary": "#ffffff",
+                    "on-primary-container": "#959995",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed-dim": "#c4c7c3",
+                    "tertiary": "#2c1600",
+                    "surface-container-highest": "#e4e2dd",
+                    "primary": "#181c19",
+                    "secondary-fixed-dim": "#bacbbe",
+                    "inverse-surface": "#30312e",
+                    "on-surface": "#1b1c19",
+                    "surface-bright": "#fbf9f4",
+                    "inverse-primary": "#c4c7c3",
+                    "tertiary-fixed": "#ffdcbd",
+                    "surface-variant": "#e4e2dd",
+                    "secondary-fixed": "#d6e7d9",
+                    "outline": "#747874",
+                    "secondary-container": "#d6e7d9",
+                    "on-surface-variant": "#444844"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "2rem",
+                    "section-gap-lg": "8rem",
+                    "section-gap-sm": "4rem",
+                    "article-max": "720px",
+                    "gallery-gap": "1rem",
+                    "container-max": "1120px"
+            },
+            "fontFamily": {
+                    "article-body": ["Inter"],
+                    "headline-md": ["Libre Caslon Text"],
+                    "label-sm": ["Inter"],
+                    "display-lg-mobile": ["Libre Caslon Text"],
+                    "caption": ["Inter"],
+                    "display-lg": ["Libre Caslon Text"]
+            },
+            "fontSize": {
+                    "article-body": ["18px", {"lineHeight": "1.75", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                    "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                    "display-lg-mobile": ["40px", {"lineHeight": "1.2", "fontWeight": "400"}],
+                    "caption": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .watermark {
+            position: fixed;
+            top: -10%;
+            left: -10%;
+            font-size: 80vh;
+            line-height: 1;
+            color: #181c19;
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+            font-family: 'Libre Caslon Text', serif;
+            user-select: none;
+        }
+        .editor-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .editor-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .editor-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(24, 28, 25, 0.1);
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #8A9A8E !important;
+            box-shadow: none !important;
+        }
+        .preview-content h1 { font-family: 'Libre Caslon Text'; font-size: 2.5rem; margin-bottom: 1rem; }
+        .preview-content h2 { font-family: 'Libre Caslon Text'; font-size: 1.8rem; margin-bottom: 1rem; }
+        .preview-content p { margin-bottom: 1.5rem; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen overflow-x-hidden">
+<!-- Background Watermark -->
+<div class="watermark" id="dynamic-watermark">墨</div>
+
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-surface-container-low border-r border-primary/5 flex flex-col py-8 px-6 z-50">
+<div class="mb-12">
+<h1 class="text-headline-md font-headline-md text-primary tracking-tight">Aesthete</h1>
+<p class="font-label-sm text-label-sm uppercase tracking-widest opacity-60 mt-1">Ethereal Curator</p>
+</div>
+<nav class="flex-1 space-y-6">
+<a class="flex items-center gap-4 text-on-surface-variant hover:text-primary transition-colors duration-300" href="admin.html">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm text-label-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 text-primary italic font-medium opacity-80 transition-all" href="editor.html">
+<span class="material-symbols-outlined">edit_note</span>
+<span class="font-label-sm text-label-sm">Workspace</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:text-primary transition-colors duration-300" href="gallery.html">
+<span class="material-symbols-outlined">palette</span>
+<span class="font-label-sm text-label-sm">Art Gallery</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant hover:text-primary transition-colors duration-300" href="admin.html">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-label-sm">Profile Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-8 border-t border-primary/5 space-y-4">
+<div class="space-y-4 pt-4">
+<a class="flex items-center gap-4 text-on-surface-variant hover:text-primary transition-colors flex items-center justify-between" href="index.html">
+<span class="font-label-sm text-label-sm">View Live Site</span>
+<span class="material-symbols-outlined text-[16px]">north_east</span>
+</a>
+</div>
+</div>
+</aside>
+
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-gutter py-4 ml-64 max-w-[calc(100%-16rem)] bg-background/80 backdrop-blur-md sticky top-0 z-40 border-b border-primary/5">
+<div class="flex items-center gap-6">
+    <!-- Segment Switcher at the Top -->
+    <div class="flex bg-surface-container border border-primary/5 p-1">
+        <button id="tab-essay-trigger" class="px-6 py-2 font-label-sm text-label-sm uppercase tracking-wider font-semibold italic bg-background text-primary shadow-sm transition-all duration-300">
+            Essay Writer
+        </button>
+        <button id="tab-art-trigger" class="px-6 py-2 font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant hover:text-primary transition-all duration-300">
+            Art Studio
+        </button>
+    </div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<span class="material-symbols-outlined text-secondary absolute left-3 top-1/2 -translate-y-1/2 text-sm">search</span>
+<input class="bg-surface-container-low border-none text-label-sm font-label-sm pl-10 pr-4 py-2 w-48 rounded-full focus:ring-1 focus:ring-outline transition-all" placeholder="Search archive..." type="text"/>
+</div>
+<button class="material-symbols-outlined text-secondary hover:opacity-70 transition-opacity">notifications</button>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-primary/10">
+    <img alt="Administrator Avatar" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida/ADBb0ugNErUfyEWDvSJHYEhHX61AaSnrzwNj0ker8nxV8AVCLFjSTf1mnCB-j4AcsRw8KzepabZrkQVk0xTI0EX30TQ4wBbsoX-KeHN77rDw8_-CqO6cNeWzfR3rK-h_4mbwCtl39S_cxX5TG_JfdKE5oZrL2ZsdyZLohbIVVTvwOBFbbTWSKzKJJrJLp9otkby3HCqiI8Gz33V_uyBeZj-IhiwCbOr1K4waprgjlWVpK1LGkZOPC9FK__pe5w"/>
+</div>
+</div>
+</header>
+
+<!-- Content Canvas -->
+<main class="ml-64 p-gutter relative z-10">
+<!-- ==================== WORKSPACE A: ESSAY WRITER ==================== -->
+<div id="workspace-essay" class="max-w-[1200px] mx-auto workspace-pane transition-opacity duration-300">
+    <!-- Editor Header -->
+    <div class="mb-12 flex flex-col gap-6">
+        <div class="flex justify-between items-end gap-12">
+            <div class="flex-1">
+                <label class="block font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-4 opacity-60">Essay Title</label>
+                <input id="essay-title-input" class="w-full bg-transparent border-b border-outline/20 py-2 font-headline-md text-headline-md text-primary placeholder:opacity-30 transition-all focus:border-primary" placeholder="The Silence of Fallen Ink..." type="text"/>
+            </div>
+            <div class="w-48">
+                <label class="block font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-4 opacity-60">Watermark Char</label>
+                <input class="w-full bg-transparent border-b border-outline/20 py-2 font-headline-md text-headline-md text-center text-primary transition-all focus:border-primary" id="watermark-input" maxlength="1" type="text" value="墨"/>
+            </div>
+        </div>
+    </div>
+    <!-- Main Editor Interface -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 h-[calc(100vh-320px)] min-h-[600px]">
+        <!-- Writing Panel -->
+        <div class="flex flex-col bg-surface-container-lowest rounded-xl border border-primary/5 overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-3 border-b border-primary/5 bg-surface-container-low">
+                <div class="flex items-center gap-4">
+                    <button class="material-symbols-outlined text-secondary hover:text-primary transition-colors" title="Bold">format_bold</button>
+                    <button class="material-symbols-outlined text-secondary hover:text-primary transition-colors" title="Italic">format_italic</button>
+                    <button class="material-symbols-outlined text-secondary hover:text-primary transition-colors" title="Quote">format_quote</button>
+                    <span class="w-px h-4 bg-outline/20 mx-1"></span>
+                    <button class="material-symbols-outlined text-secondary hover:text-primary transition-colors" title="Insert Image">image</button>
+                    <button class="material-symbols-outlined text-secondary hover:text-primary transition-colors" title="Link">link</button>
+                </div>
+                <span class="font-label-sm text-label-sm text-secondary/50">Markdown Mode</span>
+            </div>
+            <textarea class="flex-1 p-8 font-article-body text-article-body bg-transparent resize-none editor-scrollbar placeholder:opacity-20 border-none" id="markdown-editor" placeholder="Begin your journey here..."></textarea>
+        </div>
+        <!-- Preview Panel -->
+        <div class="flex flex-col bg-surface-container-low/30 rounded-xl border border-primary/5 overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-3 border-b border-primary/5">
+                <span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest opacity-60">Live Preview</span>
+                <div class="flex gap-2">
+                    <span class="w-2 h-2 rounded-full bg-secondary/20"></span>
+                    <span class="w-2 h-2 rounded-full bg-secondary/20"></span>
+                    <span class="w-2 h-2 rounded-full bg-secondary/20"></span>
+                </div>
+            </div>
+            <div class="flex-1 p-8 overflow-y-auto editor-scrollbar preview-content font-article-body text-article-body text-on-surface-variant" id="preview-area">
+                <p class="italic opacity-40">Your words will appear here in the curated aesthetic...</p>
+            </div>
+        </div>
+    </div>
+    <!-- Footer Actions -->
+    <div class="mt-12 flex items-center justify-between border-t border-primary/5 pt-8">
+        <div class="flex items-center gap-8">
+            <div class="flex flex-col">
+                <span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest opacity-40 mb-1">Status</span>
+                <span class="font-label-sm text-label-sm text-primary flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
+                    Autosaved 2 mins ago
+                </span>
+            </div>
+            <div class="flex flex-col">
+                <span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest opacity-40 mb-1">Word Count</span>
+                <span class="font-label-sm text-label-sm text-primary" id="word-count">0 words</span>
+            </div>
+        </div>
+        <div class="flex gap-4">
+            <button id="essay-draft-btn" class="px-8 py-3 border border-primary text-primary font-label-sm text-label-sm rounded hover:bg-primary/5 transition-colors">
+                Save Draft
+            </button>
+            <button id="essay-publish-btn" class="px-10 py-3 bg-primary text-on-primary font-label-sm text-label-sm rounded hover:opacity-90 transition-all shadow-sm">
+                Publish Essay
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== WORKSPACE B: ART STUDIO ==================== -->
+<div id="workspace-art" class="max-w-[1200px] mx-auto workspace-pane transition-opacity duration-300 hidden">
+    <!-- Header Title -->
+    <div class="mb-16">
+        <h2 class="font-headline-md text-headline-md text-primary mb-2">Art Gallery — Upload New Work</h2>
+        <div class="h-px w-24 bg-primary/10"></div>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <!-- Left Column: Upload & Preview -->
+        <div class="lg:col-span-7 space-y-12">
+            <!-- Drag & Drop Area -->
+            <div class="relative aspect-video group cursor-pointer" id="drop-zone">
+                <input accept="image/*" class="hidden" id="file-input" type="file"/>
+                <div class="absolute inset-0 border border-dashed border-primary/20 flex flex-col items-center justify-center bg-surface-container-low group-hover:bg-surface-container transition-all duration-500 overflow-hidden">
+                    <!-- Placeholder View -->
+                    <div class="flex flex-col items-center text-center px-12 space-y-4" id="upload-placeholder">
+                        <span class="material-symbols-outlined text-[48px] text-primary/20 font-light">cloud_upload</span>
+                        <div>
+                            <p class="font-article-body text-primary/60">Drag and drop your visual medium here</p>
+                            <p class="font-label-sm text-label-sm text-on-surface-variant/40 mt-2">RAW, TIFF, OR HIGH-RES JPEG UP TO 50MB</p>
+                        </div>
+                        <button class="mt-4 px-8 py-2 border border-primary/10 font-label-sm text-label-sm text-primary hover:bg-primary hover:text-on-primary transition-all">CHOOSE FILE</button>
+                    </div>
+                    <!-- Preview View -->
+                    <img class="hidden w-full h-full object-cover" id="image-preview" src=""/>
+                </div>
+            </div>
+            <!-- Description Area -->
+            <div class="space-y-4">
+                <label class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60">Description / Curator's Notes</label>
+                <textarea class="w-full bg-transparent border-none border-b border-primary/10 p-0 focus:ring-0 focus:border-primary transition-colors font-article-body resize-none placeholder:text-on-surface-variant/30 custom-scrollbar" placeholder="The narrative behind the creation, technical specifics, or emotional resonance..." rows="8"></textarea>
+            </div>
+        </div>
+        <!-- Right Column: Form Fields -->
+        <div class="lg:col-span-5 space-y-12 lg:pl-12 lg:border-l border-primary/5">
+            <div class="space-y-10">
+                <!-- Artwork Title -->
+                <div class="space-y-4">
+                    <label class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60">Artwork Title</label>
+                    <input id="art-title-input" class="w-full bg-transparent border-none border-b border-primary/10 p-0 pb-2 focus:ring-0 focus:border-primary transition-colors font-headline-md text-headline-md placeholder:text-on-surface-variant/20 italic" placeholder="Untitled No. 1" type="text"/>
+                </div>
+                <!-- Creation Date -->
+                <div class="space-y-4">
+                    <label class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60">Creation Date</label>
+                    <div class="relative">
+                        <input class="w-full bg-transparent border-none border-b border-primary/10 p-0 pb-2 focus:ring-0 focus:border-primary transition-colors font-article-body appearance-none" type="date"/>
+                        <span class="material-symbols-outlined absolute right-0 top-0 text-on-surface-variant/40">calendar_today</span>
+                    </div>
+                </div>
+                <!-- Medium / Category -->
+                <div class="space-y-4">
+                    <label class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60">Medium / Category</label>
+                    <div class="relative">
+                        <select class="w-full bg-transparent border-none border-b border-primary/10 p-0 pb-2 focus:ring-0 focus:border-primary transition-colors font-article-body appearance-none cursor-pointer">
+                            <option disabled="" selected="" value="">Select medium</option>
+                            <option value="oil">Oil on Canvas</option>
+                            <option value="digital">Digital Composition</option>
+                            <option value="sculpture">3D / Sculpture</option>
+                            <option value="photography">Atmospheric Photography</option>
+                            <option value="mixed">Mixed Media</option>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-0 top-0 pointer-events-none text-on-surface-variant/40">expand_more</span>
+                    </div>
+                </div>
+                <!-- Tags / Keywords -->
+                <div class="space-y-4">
+                    <label class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60">Tags</label>
+                    <input class="w-full bg-transparent border-none border-b border-primary/10 p-0 pb-2 focus:ring-0 focus:border-primary transition-colors font-article-body placeholder:text-on-surface-variant/30" placeholder="Add tags (separate with commas)..." type="text"/>
+                </div>
+            </div>
+            <!-- Action Buttons -->
+            <div class="pt-8 space-y-4">
+                <button id="art-publish-btn" class="w-full bg-primary text-on-primary py-4 px-6 font-label-sm text-label-sm hover:opacity-90 transition-all flex items-center justify-center gap-4 group">
+                    PUBLISH TO GALLERY
+                    <span class="material-symbols-outlined text-[18px] group-hover:translate-y-0.5 transition-transform">arrow_forward</span>
+                </button>
+                <button id="art-draft-btn" class="w-full border border-primary/10 text-primary py-4 px-6 font-label-sm text-label-sm hover:bg-primary/5 transition-all">
+                    SAVE AS DRAFT
+                </button>
+            </div>
+            <!-- Meta Info Hint -->
+            <div class="bg-surface-container-low p-6 space-y-3">
+                <div class="flex items-center gap-2 text-primary/60">
+                    <span class="material-symbols-outlined text-[16px]">info</span>
+                    <span class="font-label-sm text-label-sm uppercase tracking-wider">Curator's Tip</span>
+                </div>
+                <p class="font-article-body text-[14px] leading-relaxed text-on-surface-variant/80 italic">
+                    Works with detailed descriptions and specific medium categorization receive 40% more engagement in the 'Explore' section of the gallery.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Spacer for footer clearance -->
+<div class="h-24"></div>
+</main>
+
+<script>
+    // Tab switching engine
+    const tabEssayTrigger = document.getElementById('tab-essay-trigger');
+    const tabArtTrigger = document.getElementById('tab-art-trigger');
+    const workspaceEssay = document.getElementById('workspace-essay');
+    const workspaceArt = document.getElementById('workspace-art');
+    const dynamicWatermark = document.getElementById('dynamic-watermark');
+
+    function switchWorkspace(target) {
+        if (target === 'essay') {
+            tabEssayTrigger.className = "px-6 py-2 font-label-sm text-label-sm uppercase tracking-wider font-semibold italic bg-background text-primary shadow-sm transition-all duration-300";
+            tabArtTrigger.className = "px-6 py-2 font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant hover:text-primary transition-all duration-300";
+            
+            workspaceArt.classList.add('hidden');
+            workspaceEssay.classList.remove('hidden');
+            
+            dynamicWatermark.textContent = document.getElementById('watermark-input').value || '墨';
+        } else {
+            tabArtTrigger.className = "px-6 py-2 font-label-sm text-label-sm uppercase tracking-wider font-semibold italic bg-background text-primary shadow-sm transition-all duration-300";
+            tabEssayTrigger.className = "px-6 py-2 font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant hover:text-primary transition-all duration-300";
+            
+            workspaceEssay.classList.add('hidden');
+            workspaceArt.classList.remove('hidden');
+            
+            dynamicWatermark.textContent = '图';
+        }
+    }
+
+    tabEssayTrigger.addEventListener('click', () => switchWorkspace('essay'));
+    tabArtTrigger.addEventListener('click', () => switchWorkspace('art'));
+
+    // ==================== ESSAY WRITER LOGIC ====================
+    const editor = document.getElementById('markdown-editor');
+    const preview = document.getElementById('preview-area');
+    const wordCount = document.getElementById('word-count');
+    const watermarkInput = document.getElementById('watermark-input');
+
+    editor.addEventListener('input', (e) => {
+        const text = e.target.value;
+        
+        let html = text
+            .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+            .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+            .replace(/^\> (.*$)/gim, '<blockquote class="border-l-2 border-primary/20 pl-4 italic my-4">$1</blockquote>')
+            .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
+            .replace(/\*(.*)\*/gim, '<em>$1</em>')
+            .replace(/\n$/gim, '<br />')
+            .replace(/\n/gim, '<p></p>');
+
+        if (text.trim() === '') {
+            preview.innerHTML = '<p class="italic opacity-40">Your words will appear here in the curated aesthetic...</p>';
+            wordCount.innerText = '0 words';
+        } else {
+            preview.innerHTML = html;
+            const words = text.trim().split(/\s+/).length;
+            wordCount.innerText = `${words} words`;
+        }
+    });
+
+    watermarkInput.addEventListener('input', (e) => {
+        const char = e.target.value || ' ';
+        if (workspaceEssay.classList.contains('hidden') === false) {
+            dynamicWatermark.innerText = char;
+        }
+    });
+
+    // Formatting triggers
+    document.querySelectorAll('button[title]').forEach(btn => {
+        btn.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            const action = btn.getAttribute('title');
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const val = editor.value;
+            
+            if (action === 'Bold') {
+                editor.value = val.substring(0, start) + '**' + val.substring(start, end) + '**' + val.substring(end);
+            } else if (action === 'Italic') {
+                editor.value = val.substring(0, start) + '*' + val.substring(start, end) + '*' + val.substring(end);
+            }
+            
+            editor.dispatchEvent(new Event('input'));
+        });
+    });
+
+    const essayPublishBtn = document.getElementById('essay-publish-btn');
+    const essayDraftBtn = document.getElementById('essay-draft-btn');
+
+    essayPublishBtn.addEventListener('click', () => {
+        const titleInput = document.getElementById('essay-title-input');
+        if (!titleInput.value.trim()) {
+            titleInput.focus();
+            return;
+        }
+        const originalText = essayPublishBtn.textContent;
+        essayPublishBtn.disabled = true;
+        essayPublishBtn.innerHTML = 'PUBLISHING...';
+
+        setTimeout(() => {
+            essayPublishBtn.textContent = 'PUBLISHED SUCCESSFULLY!';
+            essayPublishBtn.classList.add('bg-secondary', 'text-on-secondary');
+
+            setTimeout(() => {
+                essayPublishBtn.textContent = originalText;
+                essayPublishBtn.classList.remove('bg-secondary', 'text-on-secondary');
+                essayPublishBtn.disabled = false;
+                titleInput.value = '';
+                editor.value = '';
+                editor.dispatchEvent(new Event('input'));
+            }, 2000);
+        }, 1500);
+    });
+
+    essayDraftBtn.addEventListener('click', () => {
+        const originalText = essayDraftBtn.textContent;
+        essayDraftBtn.disabled = true;
+        essayDraftBtn.textContent = 'SAVING DRAFT...';
+
+        setTimeout(() => {
+            essayDraftBtn.textContent = 'DRAFT SAVED!';
+            setTimeout(() => {
+                essayDraftBtn.textContent = originalText;
+                essayDraftBtn.disabled = false;
+            }, 2000);
+        }, 1000);
+    });
+
+
+    // ==================== ART STUDIO LOGIC ====================
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const previewImg = document.getElementById('image-preview');
+    const placeholder = document.getElementById('upload-placeholder');
+
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('bg-secondary-container/30');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('bg-secondary-container/30');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('bg-secondary-container/30');
+        const file = e.dataTransfer.files[0];
+        handleFile(file);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        handleFile(file);
+    });
+
+    function handleFile(file) {
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+                previewImg.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    const artPublishBtn = document.getElementById('art-publish-btn');
+    const artDraftBtn = document.getElementById('art-draft-btn');
+
+    artPublishBtn.addEventListener('click', () => {
+        const titleInput = document.getElementById('art-title-input');
+        if (!titleInput.value.trim()) {
+            titleInput.focus();
+            return;
+        }
+        const originalText = artPublishBtn.innerHTML;
+        artPublishBtn.disabled = true;
+        artPublishBtn.innerHTML = 'PUBLISHING...';
+
+        setTimeout(() => {
+            artPublishBtn.innerHTML = 'PUBLISHED SUCCESSFULLY!';
+            artPublishBtn.classList.add('bg-secondary', 'text-on-secondary');
+
+            setTimeout(() => {
+                artPublishBtn.innerHTML = originalText;
+                artPublishBtn.classList.remove('bg-secondary', 'text-on-secondary');
+                artPublishBtn.disabled = false;
+                titleInput.value = '';
+                previewImg.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+            }, 2000);
+        }, 1500);
+    });
+
+    artDraftBtn.addEventListener('click', () => {
+        const originalText = artDraftBtn.textContent;
+        artDraftBtn.disabled = true;
+        artDraftBtn.textContent = 'SAVING DRAFT...';
+
+        setTimeout(() => {
+            artDraftBtn.textContent = 'DRAFT SAVED!';
+            setTimeout(() => {
+                artDraftBtn.textContent = originalText;
+                artDraftBtn.disabled = false;
+            }, 2000);
+        }, 1000);
+    });
+</script>
+</body></html>
