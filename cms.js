@@ -109,6 +109,32 @@ const CMS_DEFAULT_ARTWORKS = [
     }
 ];
 
+function syncToServer() {
+    if (typeof window !== 'undefined' && window.__CMS_DATA__) {
+        fetch('/api/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                profile: localStorage.getItem('aesthete_profile') ? JSON.parse(localStorage.getItem('aesthete_profile')) : null,
+                essays: localStorage.getItem('aesthete_essays') ? JSON.parse(localStorage.getItem('aesthete_essays')) : [],
+                artworks: localStorage.getItem('aesthete_artworks') ? JSON.parse(localStorage.getItem('aesthete_artworks')) : [],
+                deleted_essays: localStorage.getItem('aesthete_deleted_essays') ? JSON.parse(localStorage.getItem('aesthete_deleted_essays')) : [],
+                deleted_artworks: localStorage.getItem('aesthete_deleted_artworks') ? JSON.parse(localStorage.getItem('aesthete_deleted_artworks')) : []
+            })
+        }).catch(err => console.error("Error syncing database to server:", err));
+    }
+}
+
+// Synchronize server database data into LocalStorage on load if __CMS_DATA__ is present
+if (typeof window !== 'undefined' && window.__CMS_DATA__) {
+    const data = window.__CMS_DATA__;
+    if (data.profile) localStorage.setItem('aesthete_profile', JSON.stringify(data.profile));
+    if (data.essays) localStorage.setItem('aesthete_essays', JSON.stringify(data.essays));
+    if (data.artworks) localStorage.setItem('aesthete_artworks', JSON.stringify(data.artworks));
+    if (data.deleted_essays) localStorage.setItem('aesthete_deleted_essays', JSON.stringify(data.deleted_essays));
+    if (data.deleted_artworks) localStorage.setItem('aesthete_deleted_artworks', JSON.stringify(data.deleted_artworks));
+}
+
 const cms = {
     getProfile() {
         const stored = localStorage.getItem('aesthete_profile');
@@ -123,6 +149,7 @@ const cms = {
             avatar: avatarBase64 || current.avatar
         };
         localStorage.setItem('aesthete_profile', JSON.stringify(updated));
+        syncToServer();
         return updated;
     },
 
@@ -172,6 +199,7 @@ const cms = {
 
         custom.unshift(newEssay);
         localStorage.setItem('aesthete_essays', JSON.stringify(custom));
+        syncToServer();
         return newEssay;
     },
 
@@ -190,6 +218,7 @@ const cms = {
             custom[idx].char = char || '墨';
             custom[idx].desc = desc;
             localStorage.setItem('aesthete_essays', JSON.stringify(custom));
+            syncToServer();
             return custom[idx];
         } else {
             // Override a default essay in custom storage
@@ -206,6 +235,7 @@ const cms = {
             };
             custom.unshift(overridden);
             localStorage.setItem('aesthete_essays', JSON.stringify(custom));
+            syncToServer();
             return overridden;
         }
     },
@@ -224,6 +254,7 @@ const cms = {
             deleted.push(id);
             localStorage.setItem('aesthete_deleted_essays', JSON.stringify(deleted));
         }
+        syncToServer();
         return true;
     },
 
@@ -256,6 +287,7 @@ const cms = {
 
         custom.unshift(newArt);
         localStorage.setItem('aesthete_artworks', JSON.stringify(custom));
+        syncToServer();
         return newArt;
     },
 
@@ -273,6 +305,7 @@ const cms = {
             deleted.push(id);
             localStorage.setItem('aesthete_deleted_artworks', JSON.stringify(deleted));
         }
+        syncToServer();
         return true;
     }
 };

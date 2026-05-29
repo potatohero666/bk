@@ -1,0 +1,14 @@
+{
+  "name": "ethereal-curator-cms",
+  "version": "1.0.0",
+  "description": "A highly elegant, lightweight CMS and visual portfolio for a creative curator.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "author": "Aesthete",
+  "license": "MIT"
+}

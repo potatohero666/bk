@@ -4,3 +4,9 @@
 !.dev.vars.example
 .env*
 !.env.example
+
+# Node.js dependencies & databases
+node_modules/
+db.json
+db.json.tmp
+package-lock.json
