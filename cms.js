@@ -131,7 +131,12 @@ const cms = {
         const custom = stored ? JSON.parse(stored) : [];
         const customIds = new Set(custom.map(e => e.id));
         const filteredDefaults = CMS_DEFAULT_ESSAYS.filter(e => !customIds.has(e.id));
-        return [...custom, ...filteredDefaults];
+        const allEssays = [...custom, ...filteredDefaults];
+
+        // Filter out deleted essays (both custom and default ones)
+        const deletedStored = localStorage.getItem('aesthete_deleted_essays');
+        const deleted = deletedStored ? JSON.parse(deletedStored) : [];
+        return allEssays.filter(e => !deleted.includes(e.id));
     },
 
     getEssayById(id) {
@@ -206,12 +211,20 @@ const cms = {
     },
 
     deleteEssay(id) {
+        // Remove from custom storage list if present
         const stored = localStorage.getItem('aesthete_essays');
         let custom = stored ? JSON.parse(stored) : [];
-        const initialLen = custom.length;
         custom = custom.filter(e => e.id !== id);
         localStorage.setItem('aesthete_essays', JSON.stringify(custom));
-        return custom.length < initialLen;
+
+        // Add to global deleted ID set
+        const deletedStored = localStorage.getItem('aesthete_deleted_essays');
+        let deleted = deletedStored ? JSON.parse(deletedStored) : [];
+        if (!deleted.includes(id)) {
+            deleted.push(id);
+            localStorage.setItem('aesthete_deleted_essays', JSON.stringify(deleted));
+        }
+        return true;
     },
 
     getArtworks() {
@@ -219,7 +232,12 @@ const cms = {
         const custom = stored ? JSON.parse(stored) : [];
         const customIds = new Set(custom.map(a => a.id));
         const filteredDefaults = CMS_DEFAULT_ARTWORKS.filter(a => !customIds.has(a.id));
-        return [...custom, ...filteredDefaults];
+        const allArt = [...custom, ...filteredDefaults];
+
+        // Filter out deleted artworks
+        const deletedStored = localStorage.getItem('aesthete_deleted_artworks');
+        const deleted = deletedStored ? JSON.parse(deletedStored) : [];
+        return allArt.filter(a => !deleted.includes(a.id));
     },
 
     addArtwork(title, date, medium, tags, desc, imageBase64) {
@@ -242,12 +260,19 @@ const cms = {
     },
 
     deleteArtwork(id) {
+        // Remove from custom list if present
         const stored = localStorage.getItem('aesthete_artworks');
-        if (!stored) return false;
-        let custom = JSON.parse(stored);
-        const initialLen = custom.length;
+        let custom = stored ? JSON.parse(stored) : [];
         custom = custom.filter(a => a.id !== id);
         localStorage.setItem('aesthete_artworks', JSON.stringify(custom));
-        return custom.length < initialLen;
+
+        // Add to global deleted ID set
+        const deletedStored = localStorage.getItem('aesthete_deleted_artworks');
+        let deleted = deletedStored ? JSON.parse(deletedStored) : [];
+        if (!deleted.includes(id)) {
+            deleted.push(id);
+            localStorage.setItem('aesthete_deleted_artworks', JSON.stringify(deleted));
+        }
+        return true;
     }
 };

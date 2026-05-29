@@ -631,12 +631,16 @@
         const container = document.querySelector('#content-dashboard .space-y-6');
         if (container) {
             container.innerHTML = essays.map(essay => {
-                const dateParts = essay.date.split('.');
-                const displayDate = `${dateParts[2] || '01'} ${["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][parseInt(dateParts[1] || '1', 10) - 1] || 'Oct'}`;
+                const dateStr = essay.date || '2024.11.15';
+                const dateParts = dateStr.split ? dateStr.split('.') : ['2024', '11', '15'];
+                const monthIdx = parseInt(dateParts[1] || '11', 10) - 1;
+                const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                const monthName = (monthIdx >= 0 && monthIdx < 12) ? monthNames[monthIdx] : 'Oct';
+                const displayDate = `${dateParts[2] || '15'} ${monthName}`;
                 return `
                 <div onclick="switchTab('essays')" class="group flex items-baseline justify-between hover:translate-x-2 transition-transform duration-300 cursor-pointer">
                     <span class="font-label-sm text-label-sm opacity-40 w-24">${displayDate.toUpperCase()}</span>
-                    <span class="flex-1 font-article-body text-article-body font-medium group-hover:italic transition-all">${essay.title}</span>
+                    <span class="flex-1 font-article-body text-article-body font-medium group-hover:italic transition-all">${essay.title || 'Untitled'}</span>
                     <span class="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
                 </div>
                 `;
@@ -661,7 +665,6 @@
         const tbody = document.querySelector('#content-essays tbody');
         if (tbody) {
             tbody.innerHTML = essays.map(essay => {
-                const isCustom = essay.id.startsWith('custom-');
                 const status = 'Published';
                 const statusClass = 'bg-secondary-container/40 text-on-secondary-container';
                 return `
@@ -671,20 +674,18 @@
                             <div class="w-12 h-16 bg-surface-container-high overflow-hidden flex-shrink-0">
                                 <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="${essay.hero}"/>
                             </div>
-                            <span class="font-headline-md text-[20px] text-primary">${essay.title}</span>
+                            <span class="font-headline-md text-[20px] text-primary">${essay.title || 'Untitled'}</span>
                         </div>
                     </td>
                     <td class="py-8 px-4">
                         <span class="${statusClass} px-3 py-1 font-label-sm text-[10px] uppercase tracking-widest">${status}</span>
                     </td>
-                    <td class="py-8 px-4 font-label-sm text-label-sm text-on-surface-variant">${essay.date}</td>
+                    <td class="py-8 px-4 font-label-sm text-label-sm text-on-surface-variant">${essay.date || 'Recent'}</td>
                     <td class="py-8 px-4 text-right">
                         <div class="flex items-center justify-end gap-4 opacity-40 group-hover:opacity-100 transition-opacity">
                             <a href="essay-detail.html?id=${essay.id}" class="p-2 hover:text-primary transition-colors" title="View"><span class="material-symbols-outlined">visibility</span></a>
                             <a href="editor.html?id=${essay.id}" class="p-2 hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined">edit</span></a>
-                            ${isCustom ? `
-                                <button onclick="deleteEssayItem('${essay.id}')" class="p-2 hover:text-error transition-colors" title="Delete"><span class="material-symbols-outlined">delete</span></button>
-                            ` : `<span class="text-caption text-outline/30 px-2 italic select-none">locked</span>`}
+                            <button onclick="deleteEssayItem('${essay.id}')" class="p-2 hover:text-error transition-colors" title="Delete"><span class="material-symbols-outlined">delete</span></button>
                         </div>
                     </td>
                 </tr>
@@ -700,7 +701,7 @@
     }
 
     window.deleteEssayItem = function(id) {
-        if (confirm('Are you sure you want to delete this custom essay?')) {
+        if (confirm('Are you sure you want to delete this essay?')) {
             cms.deleteEssay(id);
             refreshDashboardStats();
             refreshRecentEssays();
