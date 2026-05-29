@@ -7,6 +7,7 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="cms.js"></script>
 <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
@@ -311,51 +312,31 @@
 </footer>
 
 <script>
-    // Pure Frontend Mock Data for Searching
-    const archiveData = [
-        {
-            title: "The Silence of Stone",
-            date: "October 14, 2024",
-            desc: "A study on the brutalist aesthetic and the permanence of form in a digital era.",
+    // Generate archiveData dynamically from CMS
+    const essays = cms.getEssays();
+    const artworks = cms.getArtworks();
+    
+    const archiveData = [];
+    essays.forEach(e => {
+        archiveData.push({
+            title: e.title,
+            date: e.date,
+            desc: e.desc,
             type: "Essay",
-            link: "essay-detail.html"
-        },
-        {
-            title: "Gallery: Whispers of the Loom",
-            date: "October 02, 2024",
-            desc: "A photographic series capturing the intricate dance of light across ancient textiles.",
+            link: `essay-detail.html?id=${e.id}`
+        });
+    });
+    artworks.forEach(a => {
+        // Fallback or full date conversion
+        archiveData.push({
+            title: `Observation: ${a.title}`,
+            date: `${a.date}.01.01`, 
+            displayDate: `${a.date} (${a.medium})`,
+            desc: a.desc,
             type: "Visual Art",
             link: "gallery.html"
-        },
-        {
-            title: "The Ephemerality of the Infinite Scroll",
-            date: "September 21, 2024",
-            desc: "Contemplating the loss of deep attention in modern media consumption.",
-            type: "Essay",
-            link: "essay-detail.html"
-        },
-        {
-            title: "Wintering: A Creative Sabbatical",
-            date: "December 29, 2023",
-            desc: "Reflections on the necessity of dormancy for artistic rejuvenation.",
-            type: "Essay",
-            link: "essay-detail.html"
-        },
-        {
-            title: "Chromatics of the Midday Sun",
-            date: "June 15, 2023",
-            desc: "A collection of oil paintings exploring high-contrast landscapes.",
-            type: "Visual Art",
-            link: "gallery.html"
-        },
-        {
-            title: "In Praise of the Analog",
-            date: "June 04, 2023",
-            desc: "Why the tactile feedback of paper and ink remains superior to the pixel.",
-            type: "Essay",
-            link: "essay-detail.html"
-        }
-    ];
+        });
+    });
 
     const searchInput = document.getElementById('search-input');
     const timelineContainer = document.getElementById('timeline-container');
@@ -365,6 +346,71 @@
     const resultsList = document.getElementById('search-results-list');
     const emptyState = document.getElementById('empty-state');
     const resetBtn = document.getElementById('reset-search-btn');
+
+    // Dynamic Timeline Curation
+    function renderTimeline() {
+        if (!timelineContainer) return;
+
+        // Group entries by year, then month
+        const groups = {};
+        archiveData.forEach(item => {
+            const parts = item.date.split('.');
+            const year = parts[0] || 'Recent';
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const monthIdx = parseInt(parts[1] || '1', 10) - 1;
+            const month = monthNames[monthIdx] || 'Curation';
+
+            if (!groups[year]) groups[year] = {};
+            if (!groups[year][month]) groups[year][month] = [];
+            groups[year][month].push(item);
+        });
+
+        // Generate HTML
+        const yearsSorted = Object.keys(groups).sort((a, b) => b.localeCompare(a));
+        timelineContainer.innerHTML = yearsSorted.map(year => {
+            const months = groups[year];
+            const monthsSorted = Object.keys(months).sort((a, b) => {
+                const monthOrder = ["Dec", "Nov", "Oct", "Sep", "Aug", "Jul", "Jun", "May", "Apr", "Mar", "Feb", "Jan"];
+                return monthOrder.indexOf(a) - monthOrder.indexOf(b);
+            });
+
+            return `
+            <section class="mb-16">
+                <div class="flex items-baseline gap-4 mb-8">
+                    <h2 class="font-headline-md text-headline-md text-primary">${year}</h2>
+                    <div class="h-px flex-grow bg-primary/10"></div>
+                </div>
+                ${monthsSorted.map(month => `
+                    <div class="mb-12">
+                        <h3 class="font-label-sm text-label-sm uppercase tracking-widest text-secondary mb-6">${month}</h3>
+                        <div class="space-y-10">
+                            ${months[month].map(item => `
+                                <a href="${item.link}" class="group flex flex-col md:flex-row md:items-baseline gap-2 md:gap-8 cursor-pointer block">
+                                    <span class="font-label-sm text-label-sm text-on-surface-variant w-16 shrink-0">${item.date.split('.')[2] || '01'} ${month}</span>
+                                    <div class="flex-grow">
+                                        <h4 class="font-headline-md text-2xl text-primary group-hover:italic transition-all duration-300">${item.title}</h4>
+                                        <p class="text-on-surface-variant text-caption mt-1 opacity-80 group-hover:opacity-100 transition-opacity">${item.desc}</p>
+                                    </div>
+                                    <span class="hidden md:block material-symbols-outlined text-primary/20 group-hover:text-primary transition-colors" data-icon="north_east">north_east</span>
+                                </a>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('')}
+            </section>
+            `;
+        }).join('') + `
+            <!-- Load More Interaction -->
+            <div class="flex justify-center mt-12">
+                <button class="px-12 py-4 bg-primary text-on-primary font-label-sm uppercase tracking-widest hover:bg-primary/90 transition-all duration-300 group flex items-center gap-2">
+                    Reveal Further Archive
+                    <span class="material-symbols-outlined text-[18px] group-hover:translate-y-0.5 transition-transform" data-icon="expand_more">expand_more</span>
+                </button>
+            </div>
+        `;
+    }
+
+    renderTimeline();
 
     searchInput.addEventListener('input', function() {
         const val = this.value.trim().toLowerCase();
@@ -432,7 +478,7 @@
     window.addEventListener('scroll', () => {
         const scrolled = window.pageYOffset;
         const watermark = document.querySelector('.archive-watermark');
-        watermark.style.transform = `translateY(${scrolled * 0.15}px)`;
+        if (watermark) watermark.style.transform = `translateY(${scrolled * 0.15}px)`;
     });
 </script>
 </body></html>

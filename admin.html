@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <!-- Material Symbols -->
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="cms.js"></script>
 <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
@@ -577,17 +578,154 @@
         });
     }
 
+    // --- CMS Data Synchronization ---
+    document.addEventListener('DOMContentLoaded', () => {
+        // Load administrator profile
+        refreshAdminProfile();
+
+        // Load dashboard quick stats
+        refreshDashboardStats();
+
+        // Populate recent essays list on Dashboard
+        refreshRecentEssays();
+
+        // Populate recent art on Dashboard
+        refreshRecentArt();
+
+        // Populate essays table on Management Tab
+        refreshEssaysTable();
+    });
+
+    function refreshAdminProfile() {
+        const profile = cms.getProfile();
+        
+        // Header avatar
+        const adminHeaderAvatar = document.querySelector('header img[alt="Administrator Avatar"]');
+        if (adminHeaderAvatar) adminHeaderAvatar.src = profile.avatar;
+
+        // Settings Preview
+        const settingsAvatarImg = document.getElementById('curator-avatar-img');
+        if (settingsAvatarImg) settingsAvatarImg.src = profile.avatar;
+
+        // Inputs
+        const nameInput = document.querySelector('#content-settings input[placeholder="Enter your handle..."]');
+        if (nameInput) nameInput.value = profile.name;
+
+        const bioTextarea = document.querySelector('#content-settings textarea[placeholder="A poetic reflection of your creative vision..."]');
+        if (bioTextarea) bioTextarea.value = profile.bio;
+    }
+
+    function refreshDashboardStats() {
+        const essaysCount = cms.getEssays().length;
+        const artworksCount = cms.getArtworks().length;
+
+        const statsBoxes = document.querySelectorAll('.bg-surface-container.border.border-primary/5');
+        if (statsBoxes.length >= 2) {
+            statsBoxes[0].querySelector('div').innerText = essaysCount;
+            statsBoxes[1].querySelector('div').innerText = artworksCount;
+        }
+    }
+
+    function refreshRecentEssays() {
+        const essays = cms.getEssays().slice(0, 3);
+        const container = document.querySelector('#content-dashboard .space-y-6');
+        if (container) {
+            container.innerHTML = essays.map(essay => {
+                const dateParts = essay.date.split('.');
+                const displayDate = `${dateParts[2] || '01'} ${["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][parseInt(dateParts[1] || '1', 10) - 1] || 'Oct'}`;
+                return `
+                <div onclick="switchTab('essays')" class="group flex items-baseline justify-between hover:translate-x-2 transition-transform duration-300 cursor-pointer">
+                    <span class="font-label-sm text-label-sm opacity-40 w-24">${displayDate.toUpperCase()}</span>
+                    <span class="flex-1 font-article-body text-article-body font-medium group-hover:italic transition-all">${essay.title}</span>
+                    <span class="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+                </div>
+                `;
+            }).join('');
+        }
+    }
+
+    function refreshRecentArt() {
+        const artworks = cms.getArtworks().slice(0, 2);
+        const container = document.querySelector('#content-dashboard .grid.grid-cols-2.gap-4');
+        if (container && artworks.length > 0) {
+            container.innerHTML = artworks.map((art, idx) => `
+                <div class="aspect-square relative overflow-hidden group">
+                    <img alt="${art.title}" class="object-cover w-full h-full filter grayscale hover:grayscale-0 transition-all duration-700 ease-in-out transform group-hover:scale-105" src="${art.image}"/>
+                </div>
+            `).join('');
+        }
+    }
+
+    function refreshEssaysTable() {
+        const essays = cms.getEssays();
+        const tbody = document.querySelector('#content-essays tbody');
+        if (tbody) {
+            tbody.innerHTML = essays.map(essay => {
+                const isCustom = essay.id.startsWith('custom-');
+                const status = 'Published';
+                const statusClass = 'bg-secondary-container/40 text-on-secondary-container';
+                return `
+                <tr class="group hover:bg-surface-container-low transition-colors" data-id="${essay.id}">
+                    <td class="py-8 px-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-16 bg-surface-container-high overflow-hidden flex-shrink-0">
+                                <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="${essay.hero}"/>
+                            </div>
+                            <span class="font-headline-md text-[20px] text-primary">${essay.title}</span>
+                        </div>
+                    </td>
+                    <td class="py-8 px-4">
+                        <span class="${statusClass} px-3 py-1 font-label-sm text-[10px] uppercase tracking-widest">${status}</span>
+                    </td>
+                    <td class="py-8 px-4 font-label-sm text-label-sm text-on-surface-variant">${essay.date}</td>
+                    <td class="py-8 px-4 text-right">
+                        <div class="flex items-center justify-end gap-4 opacity-40 group-hover:opacity-100 transition-opacity">
+                            <a href="essay-detail.html?id=${essay.id}" class="p-2 hover:text-primary transition-colors" title="View"><span class="material-symbols-outlined">visibility</span></a>
+                            ${isCustom ? `
+                                <button onclick="deleteEssayItem('${essay.id}')" class="p-2 hover:text-error transition-colors" title="Delete"><span class="material-symbols-outlined">delete</span></button>
+                            ` : `<span class="text-caption text-outline/30 px-2 italic select-none">locked</span>`}
+                        </div>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        // Update count text
+        const countText = document.querySelector('#content-essays p.font-label-sm');
+        if (countText) {
+            countText.innerText = `Showing 1 to ${essays.length} of ${essays.length} essays`;
+        }
+    }
+
+    window.deleteEssayItem = function(id) {
+        if (confirm('Are you sure you want to delete this custom essay?')) {
+            cms.deleteEssay(id);
+            refreshDashboardStats();
+            refreshRecentEssays();
+            refreshEssaysTable();
+        }
+    };
+
     // Settings Profile Form Submit
     const settingsForm = document.querySelector('#content-settings form');
     if (settingsForm) {
         settingsForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const submitBtn = settingsForm.querySelector('button[type="submit"]');
+            const nameInput = document.querySelector('#content-settings input[placeholder="Enter your handle..."]');
+            const bioTextarea = document.querySelector('#content-settings textarea[placeholder="A poetic reflection of your creative vision..."]');
+            const avatarPreviewImg = document.getElementById('curator-avatar-img');
+
             const originalText = submitBtn.textContent;
             submitBtn.disabled = true;
             submitBtn.textContent = 'SAVING CONFIGURATION...';
 
             setTimeout(() => {
+                // Save to CMS
+                cms.saveProfile(nameInput.value, bioTextarea.value, avatarPreviewImg.src);
+                refreshAdminProfile();
+
                 submitBtn.textContent = 'CHANGES SAVED SUCCESSFULLY!';
                 submitBtn.classList.add('bg-secondary', 'text-on-secondary');
 
@@ -596,7 +734,7 @@
                     submitBtn.classList.remove('bg-secondary', 'text-on-secondary');
                     submitBtn.disabled = false;
                 }, 2000);
-            }, 1500);
+            }, 1000);
         });
     }
 

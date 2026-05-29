@@ -7,6 +7,7 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="cms.js"></script>
 <script id="tailwind-config">
           tailwind.config = {
             darkMode: "class",
@@ -515,124 +516,208 @@
         });
     });
 
-    // Optimized Transition Logic for Writing Essays
-    document.querySelectorAll('.essay-entry').forEach(essay => {
-        essay.addEventListener('click', (e) => {
-            const bigChar = essay.querySelector('.big-character');
-            const rect = bigChar.getBoundingClientRect();
+    // Dynamic CMS Initialization
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Profile Load
+        const profile = cms.getProfile();
+        const avatarImg = document.querySelector('img[alt="Aesthete Creator Avatar"]');
+        if (avatarImg) avatarImg.src = profile.avatar;
+        const creatorName = document.querySelector('h1.font-display-lg');
+        if (creatorName) creatorName.innerText = profile.name;
+        const creatorBio = document.querySelector('p.font-article-body.text-article-body.text-on-surface-variant');
+        if (creatorBio) creatorBio.innerText = profile.bio;
+
+        // 2. Essays Load (Top 3 recent essays)
+        const essays = cms.getEssays().slice(0, 3);
+        const writingSection = document.querySelector('#Writing .space-y-16');
+        if (writingSection) {
+            writingSection.innerHTML = essays.map((essay, idx) => {
+                const alignRight = idx % 2 !== 0;
+                return `
+                <article class="essay-entry relative flex flex-col ${alignRight ? 'md:flex-row-reverse' : 'md:flex-row'} items-center group cursor-pointer reveal" data-id="${essay.id}">
+                    <div class="absolute ${alignRight ? '-right-4 md:-right-12' : '-left-4 md:-left-12'} top-1/2 -translate-y-1/2 select-none pointer-events-none">
+                        <span class="big-character text-[12rem] md:text-[18rem] leading-none opacity-5 text-primary">${essay.char || '墨'}</span>
+                    </div>
+                    <div class="relative z-10 w-full ${alignRight ? 'md:pr-24 text-left md:text-right flex flex-col items-start md:items-end' : 'md:pl-24'} transition-transform duration-500 group-hover:${alignRight ? '-translate-x-2' : 'translate-x-2'}">
+                        <div class="flex flex-col ${alignRight ? 'md:flex-row-reverse' : 'md:flex-row'} md:items-baseline gap-4 mb-4">
+                            <h3 class="font-display-lg text-headline-md md:text-5xl text-primary" role="link">${essay.title}</h3>
+                            <span class="font-label-sm text-label-sm text-outline tracking-widest">${essay.date}</span>
+                        </div>
+                        <p class="font-article-body text-article-body text-on-surface-variant max-w-article-max leading-relaxed italic">
+                            ${essay.desc}
+                        </p>
+                        <div class="mt-6 flex items-center text-primary overflow-hidden">
+                            <span class="font-label-sm text-label-sm uppercase tracking-widest ${alignRight ? 'transition-transform duration-300 group-hover:-translate-x-1' : 'translate-x-0 transition-transform duration-300 group-hover:translate-x-1'}">Read Essay</span>
+                            <span class="material-symbols-outlined ml-2 text-sm transition-transform duration-300 group-hover:translate-x-2">arrow_forward</span>
+                        </div>
+                    </div>
+                </article>
+                `;
+            }).join('');
             
-            essay.classList.add('active-essay');
-            document.body.classList.add('transitioning-page');
-            
-            bigChar.style.top = rect.top + 'px';
-            bigChar.style.left = rect.left + 'px';
-            bigChar.style.margin = '0';
-            
-            requestAnimationFrame(() => {
-                bigChar.classList.add('moving');
+            // Re-bind transition triggers
+            document.querySelectorAll('.essay-entry').forEach(essay => {
+                essay.addEventListener('click', (e) => {
+                    const id = essay.getAttribute('data-id');
+                    const bigChar = essay.querySelector('.big-character');
+                    const rect = bigChar.getBoundingClientRect();
+                    
+                    essay.classList.add('active-essay');
+                    document.body.classList.add('transitioning-page');
+                    
+                    bigChar.style.top = rect.top + 'px';
+                    bigChar.style.left = rect.left + 'px';
+                    bigChar.style.margin = '0';
+                    
+                    requestAnimationFrame(() => {
+                        bigChar.classList.add('moving');
+                    });
+
+                    setTimeout(() => {
+                        window.location.href = `essay-detail.html?id=${id}`;
+                    }, 1200);
+                });
             });
-
-            setTimeout(() => {
-                window.location.href = 'essay-detail.html';
-            }, 1200);
-        });
-    });
-
-    // Back to Home Logic
-    document.getElementById('BackHome').addEventListener('click', (e) => {
-        e.stopPropagation();
-        const detailContent = document.getElementById('DetailContent');
-        detailContent.classList.add('opacity-0');
-        detailContent.classList.remove('opacity-100');
-        
-        const activeEssay = document.querySelector('.active-essay');
-        if (activeEssay) {
-            const bigChar = activeEssay.querySelector('.big-character');
-            bigChar.classList.remove('moving');
-            
-            setTimeout(() => {
-                bigChar.style.top = '';
-                bigChar.style.left = '';
-                bigChar.style.margin = '';
-                document.body.classList.remove('transitioning-page');
-                activeEssay.classList.remove('active-essay');
-                detailContent.style.display = 'none';
-            }, 800);
         }
-    });
 
-    // --- Push and Expand Interaction ---
-    const imageOverlay = document.getElementById('ImageOverlay');
-    let currentExpandedImg = null;
-
-    galleryItems.forEach(item => {
-        const originalImg = item.querySelector('img');
-        
-        item.addEventListener('click', (e) => {
-            if (document.body.classList.contains('image-expanded')) return;
-
-            const rect = originalImg.getBoundingClientRect();
+        // 3. Artworks Load (Top 4 recent artworks)
+        const artworks = cms.getArtworks().slice(0, 4);
+        const artGrid = document.getElementById('ArtGallery');
+        if (artGrid && artworks.length > 0) {
+            // Layout classes for grid
+            const layoutClasses = [
+                "gallery-item relative aspect-[3/4] overflow-hidden group reveal",
+                "gallery-item relative aspect-[3/5] overflow-hidden group md:row-span-2 reveal",
+                "gallery-item relative aspect-square overflow-hidden group reveal",
+                "gallery-item relative aspect-[4/3] overflow-hidden group reveal"
+            ];
             
-            // Create a clone to animate
-            const expandingImg = originalImg.cloneNode();
-            expandingImg.classList.add('expanding-image');
+            artGrid.innerHTML = artworks.map((art, idx) => {
+                const layoutClass = layoutClasses[idx % layoutClasses.length];
+                const delay = (idx % 4) * 150;
+                return `
+                <div class="${layoutClass}" style="transition-delay: ${delay}ms;">
+                    <img class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110" src="${art.image}" alt="${art.title}" data-alt="${art.desc}"/>
+                    <div class="overlay absolute inset-0 bg-primary/40 opacity-0 transition-opacity duration-700 flex items-end p-6">
+                        <div class="text-on-primary translate-y-4 group-hover:translate-y-0 transition-transform duration-700">
+                            <p class="font-label-sm text-label-sm uppercase tracking-widest mb-1">${art.title}</p>
+                            <p class="font-caption text-caption italic opacity-80">${art.medium}, ${art.date}</p>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
             
-            // Set initial position
-            expandingImg.style.width = rect.width + 'px';
-            expandingImg.style.height = rect.height + 'px';
-            expandingImg.style.top = rect.top + 'px';
-            expandingImg.style.left = rect.left + 'px';
-            
-            document.body.appendChild(expandingImg);
-            currentExpandedImg = expandingImg;
+            // Re-bind image expand triggers
+            bindImageExpansion();
+        }
 
-            // Trigger "Push away" effect
-            setTimeout(() => {
-                document.body.classList.add('image-expanded');
-                expandingImg.classList.add('active');
-            }, 10);
+        // Set scroll reveal observers
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
         });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     });
 
-    // Exit Interaction
-    const closeExpansion = () => {
-        if (!currentExpandedImg) return;
+    // --- Dynamic Image Expand Interaction ---
+    function bindImageExpansion() {
+        const imageOverlay = document.getElementById('ImageOverlay');
+        let currentExpandedImg = null;
 
-        // Find original container to get target rect
-        const originalImg = Array.from(document.querySelectorAll('.gallery-item img')).find(img => img.src === currentExpandedImg.src);
-        const rect = originalImg.getBoundingClientRect();
+        // Gallery Parallax effect
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        galleryItems.forEach(item => {
+            item.addEventListener('mousemove', (e) => {
+                const { left, top, width, height } = item.getBoundingClientRect();
+                const x = (e.clientX - left) / width;
+                const y = (e.clientY - top) / height;
+                const img = item.querySelector('img');
+                if (img) img.style.transformOrigin = `${x * 100}% ${y * 100}%`;
+            });
+        });
 
-        // Start reverse transition
-        currentExpandedImg.classList.remove('active');
-        currentExpandedImg.style.width = rect.width + 'px';
-        currentExpandedImg.style.height = rect.height + 'px';
-        currentExpandedImg.style.top = rect.top + 'px';
-        currentExpandedImg.style.left = rect.left + 'px';
-        
-        document.body.classList.remove('image-expanded');
+        galleryItems.forEach(item => {
+            const originalImg = item.querySelector('img');
+            if (!originalImg) return;
+            
+            item.addEventListener('click', (e) => {
+                if (document.body.classList.contains('image-expanded')) return;
 
-        // Cleanup after transition
-        setTimeout(() => {
-            if (currentExpandedImg) {
+                const rect = originalImg.getBoundingClientRect();
+                
+                // Create a clone to animate
+                const expandingImg = originalImg.cloneNode();
+                expandingImg.classList.add('expanding-image');
+                
+                // Set initial position
+                expandingImg.style.width = rect.width + 'px';
+                expandingImg.style.height = rect.height + 'px';
+                expandingImg.style.top = rect.top + 'px';
+                expandingImg.style.left = rect.left + 'px';
+                
+                document.body.appendChild(expandingImg);
+                currentExpandedImg = expandingImg;
+
+                // Trigger "Push away" effect
+                setTimeout(() => {
+                    document.body.classList.add('image-expanded');
+                    expandingImg.classList.add('active');
+                }, 10);
+            });
+        });
+
+        const closeExpansion = () => {
+            if (!currentExpandedImg) return;
+
+            // Find original container to get target rect
+            const originalImg = Array.from(document.querySelectorAll('.gallery-item img')).find(img => img.src === currentExpandedImg.src);
+            if (!originalImg) {
                 currentExpandedImg.remove();
                 currentExpandedImg = null;
+                document.body.classList.remove('image-expanded');
+                return;
             }
-        }, 800);
-    };
+            const rect = originalImg.getBoundingClientRect();
 
-    imageOverlay.addEventListener('click', closeExpansion);
-    
-    // Allow clicking on the expanded image to close as well
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('expanding-image') && e.target.classList.contains('active')) {
-            closeExpansion();
+            // Start reverse transition
+            currentExpandedImg.classList.remove('active');
+            currentExpandedImg.style.width = rect.width + 'px';
+            currentExpandedImg.style.height = rect.height + 'px';
+            currentExpandedImg.style.top = rect.top + 'px';
+            currentExpandedImg.style.left = rect.left + 'px';
+            
+            document.body.classList.remove('image-expanded');
+
+            // Cleanup after transition
+            setTimeout(() => {
+                if (currentExpandedImg) {
+                    currentExpandedImg.remove();
+                    currentExpandedImg = null;
+                }
+            }, 800);
+        };
+
+        if (imageOverlay) {
+            imageOverlay.addEventListener('click', closeExpansion);
         }
-    });
+        
+        // Allow clicking on the expanded image to close as well
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('expanding-image') && e.target.classList.contains('active')) {
+                closeExpansion();
+            }
+        });
 
-    // Accessibility: ESC key to close
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeExpansion();
-    });
+        // Accessibility: ESC key to close
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeExpansion();
+        });
+    }
 
 </script>
 </body></html>

@@ -7,6 +7,7 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="cms.js"></script>
 <style>
         :root {
             --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -298,14 +299,44 @@
 </div>
 </footer>
 <script>
-        // Simple parallax for the background character
-        window.addEventListener('scroll', () => {
-            const character = document.querySelector('.bg-char-entrance');
-            if (character) {
-                const scrolled = window.pageYOffset;
-                // Preserve the -25% base transform and add parallax offset
-                character.style.transform = `translate(-25%, calc(-25% + ${scrolled * 0.15}px))`;
-            }
-        });
-    </script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const essays = cms.getEssays();
+        const listContainer = document.querySelector('section.flex.flex-col.gap-24');
+        if (listContainer) {
+            listContainer.innerHTML = essays.map((essay, idx) => {
+                const delay = 0.4 + idx * 0.2;
+                return `
+                <article class="writing-item group flex flex-col md:flex-row gap-8 items-start reveal-item" style="animation-delay: ${delay}s;">
+                    <div class="hidden md:block text-[80px] font-serif text-primary/5 select-none leading-none pt-2 shrink-0 decorative-char">${essay.char || '墨'}</div>
+                    <div class="flex-grow">
+                        <div class="mb-4">
+                            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest block mb-2">${essay.date}</span>
+                            <h2 class="font-headline-md text-headline-md text-primary group-hover:italic transition-all duration-300">
+                                <a href="essay-detail.html?id=${essay.id}">${essay.title}</a>
+                            </h2>
+                        </div>
+                        <p class="font-article-body text-on-surface-variant mb-6 leading-relaxed">
+                            ${essay.desc}
+                        </p>
+                        <a class="inline-flex items-center gap-2 font-label-sm text-label-sm text-primary tracking-widest" href="essay-detail.html?id=${essay.id}">
+                            Read Essay
+                            <span class="material-symbols-outlined text-sm arrow-icon">arrow_forward</span>
+                        </a>
+                    </div>
+                </article>
+                `;
+            }).join('');
+        }
+    });
+
+    // Simple parallax for the background character
+    window.addEventListener('scroll', () => {
+        const character = document.querySelector('.bg-char-entrance');
+        if (character) {
+            const scrolled = window.pageYOffset;
+            // Preserve the -25% base transform and add parallax offset
+            character.style.transform = `translate(-25%, calc(-25% + ${scrolled * 0.15}px))`;
+        }
+    });
+</script>
 </body></html>
