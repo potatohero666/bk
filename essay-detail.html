@@ -275,15 +275,21 @@
             imgEl.alt = essay.title;
         }
 
-        // Render Markdown content (simple paragraph rendering)
+        // Render Markdown content (robust paragraph and linebreak splitting)
         const bodyEl = document.querySelector('.font-article-body.text-article-body');
         if (bodyEl) {
-            const paragraphs = essay.content.split('\n\n');
+            const paragraphs = essay.content.split(/\r?\n\r?\n/);
             bodyEl.innerHTML = paragraphs.map(p => {
-                if (p.trim().startsWith('>')) {
-                    return `<blockquote class="my-12 py-4 px-8 border-l border-primary/10 italic text-headline-md font-headline-md text-primary/80">${p.trim().substring(1).trim()}</blockquote>`;
+                const trimmed = p.trim();
+                if (!trimmed) return '';
+                if (trimmed.startsWith('>')) {
+                    return `<blockquote class="my-12 py-4 px-8 border-l border-primary/10 italic text-headline-md font-headline-md text-primary/80">${trimmed.substring(1).trim()}</blockquote>`;
                 }
-                return `<p>${p.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/\*([^*]+)\*/g, '<span class="italic text-primary">$1</span>')}</p>`;
+                const paragraphContent = trimmed
+                    .replace(/\r?\n/g, '<br>')
+                    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*([^*]+)\*/g, '<span class="italic text-primary">$1</span>');
+                return `<p class="mb-8 leading-relaxed font-article-body text-article-body">${paragraphContent}</p>`;
             }).join('');
         }
 

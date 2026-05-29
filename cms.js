@@ -129,7 +129,9 @@ const cms = {
     getEssays() {
         const stored = localStorage.getItem('aesthete_essays');
         const custom = stored ? JSON.parse(stored) : [];
-        return [...custom, ...CMS_DEFAULT_ESSAYS];
+        const customIds = new Set(custom.map(e => e.id));
+        const filteredDefaults = CMS_DEFAULT_ESSAYS.filter(e => !customIds.has(e.id));
+        return [...custom, ...filteredDefaults];
     },
 
     getEssayById(id) {
@@ -145,10 +147,17 @@ const cms = {
         const cleanText = content.replace(/[#*>_\-`[\]()]/g, '');
         const desc = cleanText.substring(0, 120) + (cleanText.length > 120 ? '...' : '');
 
+        // Deterministic, locale-independent date string YYYY.MM.DD
+        const d = new Date();
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        const dateString = `${yyyy}.${mm}.${dd}`;
+
         const newEssay = {
             id: 'custom-' + Date.now(),
             title: title,
-            date: new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.'),
+            date: dateString,
             desc: desc,
             content: content,
             char: char || '墨',
@@ -161,10 +170,44 @@ const cms = {
         return newEssay;
     },
 
+    updateEssay(id, title, content, char) {
+        const stored = localStorage.getItem('aesthete_essays');
+        let custom = stored ? JSON.parse(stored) : [];
+        
+        // Generate snippet descriptions
+        const cleanText = content.replace(/[#*>_\-`[\]()]/g, '');
+        const desc = cleanText.substring(0, 120) + (cleanText.length > 120 ? '...' : '');
+
+        const idx = custom.findIndex(e => e.id === id);
+        if (idx !== -1) {
+            custom[idx].title = title;
+            custom[idx].content = content;
+            custom[idx].char = char || '墨';
+            custom[idx].desc = desc;
+            localStorage.setItem('aesthete_essays', JSON.stringify(custom));
+            return custom[idx];
+        } else {
+            // Override a default essay in custom storage
+            const defaultEssay = CMS_DEFAULT_ESSAYS.find(e => e.id === id);
+            const overridden = {
+                id: id,
+                title: title,
+                date: defaultEssay ? defaultEssay.date : '2024.11.15',
+                desc: desc,
+                content: content,
+                char: char || '墨',
+                author: defaultEssay ? defaultEssay.author : this.getProfile().name,
+                hero: defaultEssay ? defaultEssay.hero : "https://lh3.googleusercontent.com/aida-public/AB6AXuAS8UjoKnNYqA105dSxiS44fPG_AmXcWIKeWPDJBeMpIBxTYuBoQPonxkjALXSNzhEpklABUHj7EpMJwa9Smw7kuSVzkURL9pIJ-at1CHwFR5IJ1eL-rVq4b2MAZ0yMrRSGDYapstlC1p2LxdRYCd-2cgTQSJgOuG62PkNl5pUvEku0xClT9snoRfHhthWaN8UNmv8d3NhwAPI3PVDR-ViYfHPg2xE1rIY8CZMz8iUEpmkDmeY8ZKfoq8MlbYtOOJKl1DhAeiykOQ"
+            };
+            custom.unshift(overridden);
+            localStorage.setItem('aesthete_essays', JSON.stringify(custom));
+            return overridden;
+        }
+    },
+
     deleteEssay(id) {
         const stored = localStorage.getItem('aesthete_essays');
-        if (!stored) return false;
-        let custom = JSON.parse(stored);
+        let custom = stored ? JSON.parse(stored) : [];
         const initialLen = custom.length;
         custom = custom.filter(e => e.id !== id);
         localStorage.setItem('aesthete_essays', JSON.stringify(custom));
@@ -174,7 +217,9 @@ const cms = {
     getArtworks() {
         const stored = localStorage.getItem('aesthete_artworks');
         const custom = stored ? JSON.parse(stored) : [];
-        return [...custom, ...CMS_DEFAULT_ARTWORKS];
+        const customIds = new Set(custom.map(a => a.id));
+        const filteredDefaults = CMS_DEFAULT_ARTWORKS.filter(a => !customIds.has(a.id));
+        return [...custom, ...filteredDefaults];
     },
 
     addArtwork(title, date, medium, tags, desc, imageBase64) {

@@ -303,7 +303,7 @@
             <!-- Description Area -->
             <div class="space-y-4">
                 <label class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60">Description / Curator's Notes</label>
-                <textarea class="w-full bg-transparent border-none border-b border-primary/10 p-0 focus:ring-0 focus:border-primary transition-colors font-article-body resize-none placeholder:text-on-surface-variant/30 custom-scrollbar" placeholder="The narrative behind the creation, technical specifics, or emotional resonance..." rows="8"></textarea>
+                <textarea id="art-desc-textarea" class="w-full bg-transparent border-none border-b border-primary/10 p-0 focus:ring-0 focus:border-primary transition-colors font-article-body resize-none placeholder:text-on-surface-variant/30 custom-scrollbar" placeholder="The narrative behind the creation, technical specifics, or emotional resonance..." rows="8"></textarea>
             </div>
         </div>
         <!-- Right Column: Form Fields -->
@@ -318,7 +318,7 @@
                 <div class="space-y-4">
                     <label class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60">Creation Date</label>
                     <div class="relative">
-                        <input class="w-full bg-transparent border-none border-b border-primary/10 p-0 pb-2 focus:ring-0 focus:border-primary transition-colors font-article-body appearance-none" type="date"/>
+                        <input id="art-date-input" class="w-full bg-transparent border-none border-b border-primary/10 p-0 pb-2 focus:ring-0 focus:border-primary transition-colors font-article-body appearance-none" type="date"/>
                         <span class="material-symbols-outlined absolute right-0 top-0 text-on-surface-variant/40">calendar_today</span>
                     </div>
                 </div>
@@ -326,7 +326,7 @@
                 <div class="space-y-4">
                     <label class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60">Medium / Category</label>
                     <div class="relative">
-                        <select class="w-full bg-transparent border-none border-b border-primary/10 p-0 pb-2 focus:ring-0 focus:border-primary transition-colors font-article-body appearance-none cursor-pointer">
+                        <select id="art-medium-select" class="w-full bg-transparent border-none border-b border-primary/10 p-0 pb-2 focus:ring-0 focus:border-primary transition-colors font-article-body appearance-none cursor-pointer">
                             <option disabled="" selected="" value="">Select medium</option>
                             <option value="oil">Oil on Canvas</option>
                             <option value="digital">Digital Composition</option>
@@ -340,7 +340,7 @@
                 <!-- Tags / Keywords -->
                 <div class="space-y-4">
                     <label class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60">Tags</label>
-                    <input class="w-full bg-transparent border-none border-b border-primary/10 p-0 pb-2 focus:ring-0 focus:border-primary transition-colors font-article-body placeholder:text-on-surface-variant/30" placeholder="Add tags (separate with commas)..." type="text"/>
+                    <input id="art-tags-input" class="w-full bg-transparent border-none border-b border-primary/10 p-0 pb-2 focus:ring-0 focus:border-primary transition-colors font-article-body placeholder:text-on-surface-variant/30" placeholder="Add tags (separate with commas)..." type="text"/>
                 </div>
             </div>
             <!-- Action Buttons -->
@@ -456,11 +456,45 @@
         });
     });
 
-    // Load administrator avatar
+    // Edit Mode check & Load profile avatar
+    let editEssayId = null;
+
     document.addEventListener('DOMContentLoaded', () => {
+        // 1. Sync admin profile avatar
         const profile = cms.getProfile();
         const adminHeaderAvatar = document.querySelector('header img[alt="Administrator Avatar"]');
         if (adminHeaderAvatar) adminHeaderAvatar.src = profile.avatar;
+
+        // 2. Check if we are editing an existing essay
+        const params = new URLSearchParams(window.location.search);
+        const essayId = params.get('id');
+        if (essayId) {
+            editEssayId = essayId;
+            const essay = cms.getEssayById(essayId);
+            if (essay) {
+                // Populate fields
+                document.getElementById('essay-title-input').value = essay.title;
+                document.getElementById('watermark-input').value = essay.char || '';
+                
+                const markdownEditor = document.getElementById('markdown-editor');
+                markdownEditor.value = essay.content || '';
+                
+                // Update dynamic watermark
+                if (dynamicWatermark) {
+                    dynamicWatermark.textContent = essay.char || '墨';
+                }
+
+                // Change titles and button labels for editing
+                const workspaceTitle = document.querySelector('h2.font-display-lg');
+                if (workspaceTitle) workspaceTitle.innerText = "Edit Essay Workspace";
+                
+                const essayPublishBtn = document.getElementById('essay-publish-btn');
+                if (essayPublishBtn) essayPublishBtn.textContent = "UPDATE ESSAY";
+
+                // Trigger markdown rendering preview
+                markdownEditor.dispatchEvent(new Event('input'));
+            }
+        }
     });
 
     const essayPublishBtn = document.getElementById('essay-publish-btn');
@@ -482,19 +516,25 @@
 
         const originalText = essayPublishBtn.textContent;
         essayPublishBtn.disabled = true;
-        essayPublishBtn.innerHTML = 'PUBLISHING...';
+        essayPublishBtn.innerHTML = editEssayId ? 'UPDATING...' : 'PUBLISHING...';
 
         setTimeout(() => {
-            // Save to CMS
-            cms.addEssay(titleInput.value, markdownEditor.value, watermarkInput.value);
+            if (editEssayId) {
+                // Edit existing essay
+                cms.updateEssay(editEssayId, titleInput.value, markdownEditor.value, watermarkInput.value);
+            } else {
+                // Save new essay
+                cms.addEssay(titleInput.value, markdownEditor.value, watermarkInput.value);
+            }
 
-            essayPublishBtn.textContent = 'PUBLISHED SUCCESSFULLY!';
+            essayPublishBtn.textContent = editEssayId ? 'UPDATED SUCCESSFULLY!' : 'PUBLISHED SUCCESSFULLY!';
             essayPublishBtn.classList.add('bg-secondary', 'text-on-secondary');
 
             setTimeout(() => {
                 essayPublishBtn.textContent = originalText;
                 essayPublishBtn.classList.remove('bg-secondary', 'text-on-secondary');
                 essayPublishBtn.disabled = false;
+                
                 titleInput.value = '';
                 markdownEditor.value = '';
                 markdownEditor.dispatchEvent(new Event('input'));
@@ -566,16 +606,16 @@
 
     artPublishBtn.addEventListener('click', () => {
         const titleInput = document.getElementById('art-title-input');
-        const dateInput = document.querySelector('#workspace-art input[type="date"]');
-        const mediumSelect = document.querySelector('#workspace-art select');
-        const tagsInput = document.querySelector('#workspace-art input[placeholder="Add tags (separate with commas)..."]');
-        const descTextarea = document.querySelector('#workspace-art textarea');
+        const dateInput = document.getElementById('art-date-input');
+        const mediumSelect = document.getElementById('art-medium-select');
+        const tagsInput = document.getElementById('art-tags-input');
+        const descTextarea = document.getElementById('art-desc-textarea');
 
-        if (!titleInput.value.trim()) {
-            titleInput.focus();
+        if (!titleInput || !titleInput.value.trim()) {
+            if (titleInput) titleInput.focus();
             return;
         }
-        if (previewImg.classList.contains('hidden')) {
+        if (previewImg && previewImg.classList.contains('hidden')) {
             alert('Please select or drop an artwork image to publish!');
             return;
         }
@@ -585,17 +625,20 @@
         artPublishBtn.innerHTML = 'PUBLISHING...';
 
         setTimeout(() => {
-            const dateVal = dateInput.value ? dateInput.value.split('-')[0] : new Date().getFullYear().toString();
-            const mediumVal = mediumSelect.options[mediumSelect.selectedIndex]?.text || 'Mixed Media';
+            const dateVal = dateInput && dateInput.value ? dateInput.value.split('-')[0] : new Date().getFullYear().toString();
+            const mediumVal = (mediumSelect && mediumSelect.options[mediumSelect.selectedIndex]?.text) || 'Mixed Media';
+            const tagsVal = tagsInput ? tagsInput.value : 'Curated';
+            const descVal = descTextarea ? descTextarea.value : '';
+            const previewSrc = previewImg ? previewImg.src : '';
             
             // Add artwork to CMS
             cms.addArtwork(
                 titleInput.value,
                 dateVal,
                 mediumVal,
-                tagsInput.value,
-                descTextarea.value,
-                previewImg.src
+                tagsVal,
+                descVal,
+                previewSrc
             );
 
             artPublishBtn.innerHTML = 'PUBLISHED SUCCESSFULLY!';
@@ -607,14 +650,16 @@
                 artPublishBtn.disabled = false;
                 
                 // Clear fields
-                titleInput.value = '';
-                dateInput.value = '';
-                mediumSelect.selectedIndex = 0;
-                tagsInput.value = '';
-                descTextarea.value = '';
-                previewImg.src = '';
-                previewImg.classList.add('hidden');
-                placeholder.classList.remove('hidden');
+                if (titleInput) titleInput.value = '';
+                if (dateInput) dateInput.value = '';
+                if (mediumSelect) mediumSelect.selectedIndex = 0;
+                if (tagsInput) tagsInput.value = '';
+                if (descTextarea) descTextarea.value = '';
+                if (previewImg) {
+                    previewImg.src = '';
+                    previewImg.classList.add('hidden');
+                }
+                if (placeholder) placeholder.classList.remove('hidden');
 
                 // Redirect to admin dashboard
                 window.location.href = 'admin.html';

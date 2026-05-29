@@ -681,6 +681,7 @@
                     <td class="py-8 px-4 text-right">
                         <div class="flex items-center justify-end gap-4 opacity-40 group-hover:opacity-100 transition-opacity">
                             <a href="essay-detail.html?id=${essay.id}" class="p-2 hover:text-primary transition-colors" title="View"><span class="material-symbols-outlined">visibility</span></a>
+                            <a href="editor.html?id=${essay.id}" class="p-2 hover:text-primary transition-colors" title="Edit"><span class="material-symbols-outlined">edit</span></a>
                             ${isCustom ? `
                                 <button onclick="deleteEssayItem('${essay.id}')" class="p-2 hover:text-error transition-colors" title="Delete"><span class="material-symbols-outlined">delete</span></button>
                             ` : `<span class="text-caption text-outline/30 px-2 italic select-none">locked</span>`}
