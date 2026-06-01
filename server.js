@@ -110,6 +110,20 @@ app.get('/*.html', (req, res) => {
     injectDatabaseAndSend(filePath, res);
 });
 
+// Handle clean, extensionless routes (e.g. /admin, /about, /gallery)
+app.get('/:page', (req, res, next) => {
+    const pageName = req.params.page;
+    // Skip static assets or API requests
+    if (pageName.includes('.') || pageName.toLowerCase() === 'api') {
+        return next();
+    }
+    const filePath = path.join(__dirname, `${pageName}.html`);
+    if (fs.existsSync(filePath)) {
+        return injectDatabaseAndSend(filePath, res);
+    }
+    next();
+});
+
 // Serve all other static assets (CSS, JS, images, icons)
 app.use(express.static(__dirname));
 
