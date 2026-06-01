@@ -109,6 +109,30 @@ const CMS_DEFAULT_ARTWORKS = [
     }
 ];
 
+const CMS_DEFAULT_MESSAGES = [
+    {
+        id: "msg-default-1",
+        name: "Elias Thorne",
+        email: "elias@example.com",
+        message: "The curation here is like a breath of crisp mountain air. Thank you for maintaining such a serene corner of the web.",
+        date: "2024.11.15"
+    },
+    {
+        id: "msg-default-2",
+        name: "Clara M.",
+        email: "clara@example.com",
+        message: "Stumbled upon the gallery while researching minimalism. The interplay of shadow and light in your latest essay really moved me.",
+        date: "2024.10.12"
+    },
+    {
+        id: "msg-default-3",
+        name: "Julian Gray",
+        email: "julian@example.com",
+        message: "A rare find. Quiet luxury indeed.",
+        date: "2024.10.05"
+    }
+];
+
 function syncToServer() {
     if (typeof window !== 'undefined' && window.__CMS_DATA__) {
         fetch('/api/save', {
@@ -119,7 +143,9 @@ function syncToServer() {
                 essays: localStorage.getItem('aesthete_essays') ? JSON.parse(localStorage.getItem('aesthete_essays')) : [],
                 artworks: localStorage.getItem('aesthete_artworks') ? JSON.parse(localStorage.getItem('aesthete_artworks')) : [],
                 deleted_essays: localStorage.getItem('aesthete_deleted_essays') ? JSON.parse(localStorage.getItem('aesthete_deleted_essays')) : [],
-                deleted_artworks: localStorage.getItem('aesthete_deleted_artworks') ? JSON.parse(localStorage.getItem('aesthete_deleted_artworks')) : []
+                deleted_artworks: localStorage.getItem('aesthete_deleted_artworks') ? JSON.parse(localStorage.getItem('aesthete_deleted_artworks')) : [],
+                messages: localStorage.getItem('aesthete_messages') ? JSON.parse(localStorage.getItem('aesthete_messages')) : [],
+                deleted_messages: localStorage.getItem('aesthete_deleted_messages') ? JSON.parse(localStorage.getItem('aesthete_deleted_messages')) : []
             })
         }).catch(err => console.error("Error syncing database to server:", err));
     }
@@ -133,9 +159,64 @@ if (typeof window !== 'undefined' && window.__CMS_DATA__) {
     if (data.artworks) localStorage.setItem('aesthete_artworks', JSON.stringify(data.artworks));
     if (data.deleted_essays) localStorage.setItem('aesthete_deleted_essays', JSON.stringify(data.deleted_essays));
     if (data.deleted_artworks) localStorage.setItem('aesthete_deleted_artworks', JSON.stringify(data.deleted_artworks));
+    if (data.messages) localStorage.setItem('aesthete_messages', JSON.stringify(data.messages));
+    if (data.deleted_messages) localStorage.setItem('aesthete_deleted_messages', JSON.stringify(data.deleted_messages));
 }
 
 const cms = {
+    getMessages() {
+        const stored = localStorage.getItem('aesthete_messages');
+        const custom = stored ? JSON.parse(stored) : [];
+        const customIds = new Set(custom.map(m => m.id));
+        const filteredDefaults = CMS_DEFAULT_MESSAGES.filter(m => !customIds.has(m.id));
+        const allMessages = [...custom, ...filteredDefaults];
+
+        // Filter out deleted messages
+        const deletedStored = localStorage.getItem('aesthete_deleted_messages');
+        const deleted = deletedStored ? JSON.parse(deletedStored) : [];
+        return allMessages.filter(m => !deleted.includes(m.id));
+    },
+
+    addMessage(name, email, message) {
+        const stored = localStorage.getItem('aesthete_messages');
+        const custom = stored ? JSON.parse(stored) : [];
+
+        const d = new Date();
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        const dateString = `${yyyy}.${mm}.${dd}`;
+
+        const newMsg = {
+            id: 'msg-custom-' + Date.now(),
+            name: name,
+            email: email,
+            message: message,
+            date: dateString
+        };
+
+        custom.unshift(newMsg);
+        localStorage.setItem('aesthete_messages', JSON.stringify(custom));
+        syncToServer();
+        return newMsg;
+    },
+
+    deleteMessage(id) {
+        const stored = localStorage.getItem('aesthete_messages');
+        let custom = stored ? JSON.parse(stored) : [];
+        custom = custom.filter(m => m.id !== id);
+        localStorage.setItem('aesthete_messages', JSON.stringify(custom));
+
+        const deletedStored = localStorage.getItem('aesthete_deleted_messages');
+        let deleted = deletedStored ? JSON.parse(deletedStored) : [];
+        if (!deleted.includes(id)) {
+            deleted.push(id);
+            localStorage.setItem('aesthete_deleted_messages', JSON.stringify(deleted));
+        }
+        syncToServer();
+        return true;
+    },
+
     getProfile() {
         const stored = localStorage.getItem('aesthete_profile');
         return stored ? JSON.parse(stored) : CMS_DEFAULT_PROFILE;

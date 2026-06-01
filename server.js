@@ -20,7 +20,9 @@ const DEFAULT_DATABASE = {
     essays: [],
     artworks: [],
     deleted_essays: [],
-    deleted_artworks: []
+    deleted_artworks: [],
+    messages: [],
+    deleted_messages: []
 };
 
 // Read Database Helper
@@ -61,7 +63,9 @@ app.post('/api/save', (req, res) => {
             essays: Array.isArray(payload.essays) ? payload.essays : currentDb.essays,
             artworks: Array.isArray(payload.artworks) ? payload.artworks : currentDb.artworks,
             deleted_essays: Array.isArray(payload.deleted_essays) ? payload.deleted_essays : currentDb.deleted_essays,
-            deleted_artworks: Array.isArray(payload.deleted_artworks) ? payload.deleted_artworks : currentDb.deleted_artworks
+            deleted_artworks: Array.isArray(payload.deleted_artworks) ? payload.deleted_artworks : currentDb.deleted_artworks,
+            messages: Array.isArray(payload.messages) ? payload.messages : currentDb.messages,
+            deleted_messages: Array.isArray(payload.deleted_messages) ? payload.deleted_messages : currentDb.deleted_messages
         };
         
         saveDatabase(updatedDb);

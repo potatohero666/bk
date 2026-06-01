@@ -159,6 +159,11 @@
 <span class="material-symbols-outlined">edit_note</span>
 <span>Essays Management</span>
 </button>
+<!-- Guestbook Tab Trigger -->
+<button data-target="guestbook" class="nav-item flex w-full items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/30 transition-colors duration-200 font-label-sm text-label-sm rounded-lg text-left">
+<span class="material-symbols-outlined">forum</span>
+<span>Guestbook Moderation</span>
+</button>
 <!-- Settings Tab Trigger -->
 <button data-target="settings" class="nav-item flex w-full items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/30 transition-colors duration-200 font-label-sm text-label-sm rounded-lg text-left">
 <span class="material-symbols-outlined">tune</span>
@@ -218,8 +223,8 @@
             <div class="h-1 w-12 bg-primary/10 mt-auto"></div>
         </div>
         <div class="bg-surface-container border border-primary/5 p-8 flex flex-col gap-4">
-            <span class="font-label-sm text-label-sm opacity-60">LAST UPDATE</span>
-            <div class="font-display-lg text-[24px] leading-tight">OCT 24, 2024</div>
+            <span class="font-label-sm text-label-sm opacity-60">GUESTBOOK ENTRIES</span>
+            <div class="font-display-lg text-[48px] leading-none">0</div>
             <div class="h-1 w-12 bg-primary/10 mt-auto"></div>
         </div>
     </section>
@@ -413,6 +418,38 @@
     </section>
 </div>
 
+<!-- ==================== TAB CONTENT: GUESTBOOK ==================== -->
+<div id="content-guestbook" class="tab-content flex-1 p-gutter max-w-container-max mx-auto w-full space-y-8 pb-24 relative z-10 hidden">
+    <section class="space-y-2 mt-6">
+        <nav class="flex items-center gap-2 text-on-surface-variant opacity-60">
+            <span class="font-label-sm text-label-sm uppercase tracking-widest">Dashboard</span>
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+            <span class="font-label-sm text-label-sm uppercase tracking-widest">Guestbook</span>
+        </nav>
+        <h2 class="font-display-lg text-display-lg text-primary">Guestbook Moderation</h2>
+    </section>
+
+    <!-- Comments Table -->
+    <section class="bg-surface-container border border-primary/5 p-8">
+        <div class="custom-scrollbar overflow-x-auto max-h-[500px]">
+            <table class="w-full text-left font-article-body text-caption">
+                <thead>
+                    <tr class="border-b border-primary/10 pb-4">
+                        <th class="py-4 font-semibold text-primary">Sender</th>
+                        <th class="py-4 font-semibold text-primary">Email</th>
+                        <th class="py-4 font-semibold text-primary">Message</th>
+                        <th class="py-4 font-semibold text-primary">Date</th>
+                        <th class="py-4 font-semibold text-primary text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="guestbook-table-body">
+                    <!-- Dynamic Comments -->
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
 <!-- ==================== TAB CONTENT: SETTINGS ==================== -->
 <div id="content-settings" class="tab-content flex-1 p-gutter max-w-container-max mx-auto w-full pb-24 relative z-10 hidden">
     <section class="mt-6">
@@ -518,6 +555,7 @@
     const tabWatermarks = {
         'dashboard': '管',
         'essays': '稿',
+        'guestbook': '语',
         'settings': '设'
     };
 
@@ -594,6 +632,9 @@
 
         // Populate essays table on Management Tab
         refreshEssaysTable();
+
+        // Populate guestbook table on Management Tab
+        refreshGuestbookTable();
     });
 
     function refreshAdminProfile() {
@@ -620,9 +661,10 @@
         const artworksCount = cms.getArtworks().length;
 
         const statsBoxes = document.querySelectorAll('.bg-surface-container.border.border-primary/5');
-        if (statsBoxes.length >= 2) {
+        if (statsBoxes.length >= 3) {
             statsBoxes[0].querySelector('div').innerText = essaysCount;
             statsBoxes[1].querySelector('div').innerText = artworksCount;
+            statsBoxes[2].querySelector('div').innerText = cms.getMessages().length;
         }
     }
 
@@ -755,5 +797,51 @@
             }
         });
     }
+
+    function refreshGuestbookTable() {
+        const messages = cms.getMessages();
+        const tbody = document.getElementById('guestbook-table-body');
+        if (tbody) {
+            if (messages.length === 0) {
+                tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="py-8 text-center text-on-surface-variant/40 italic">No guestbook entries found.</td>
+                </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = messages.map(msg => {
+                // Formatting Date
+                const dateParts = msg.date ? msg.date.split('.') : ['2026', '06', '01'];
+                const monthIdx = parseInt(dateParts[1] || '6', 10) - 1;
+                const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                const monthName = monthNames[monthIdx] || 'Jun';
+                const formattedDate = `${monthName} ${dateParts[2] || '01'}, ${dateParts[0] || '2026'}`;
+
+                return `
+                <tr class="group hover:bg-surface-container-low transition-colors border-b border-primary/5">
+                    <td class="py-6 font-semibold text-primary">${msg.name}</td>
+                    <td class="py-6 text-on-surface-variant">${msg.email}</td>
+                    <td class="py-6 text-on-surface-variant italic max-w-xs truncate" title="${msg.message}">${msg.message}</td>
+                    <td class="py-6 text-on-surface-variant">${formattedDate}</td>
+                    <td class="py-6 text-right">
+                        <div class="flex items-center justify-end gap-4 opacity-40 group-hover:opacity-100 transition-opacity">
+                            <button onclick="deleteGuestbookItem('${msg.id}')" class="p-2 hover:text-error transition-colors" title="Delete"><span class="material-symbols-outlined">delete</span></button>
+                        </div>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+    }
+
+    window.deleteGuestbookItem = function(id) {
+        if (confirm('Are you sure you want to delete this guestbook message?')) {
+            cms.deleteMessage(id);
+            refreshDashboardStats();
+            refreshGuestbookTable();
+        }
+    };
 </script>
 </body></html>
