@@ -518,15 +518,11 @@
         essayPublishBtn.disabled = true;
         essayPublishBtn.innerHTML = editEssayId ? 'UPDATING...' : 'PUBLISHING...';
 
-        setTimeout(() => {
-            if (editEssayId) {
-                // Edit existing essay
-                cms.updateEssay(editEssayId, titleInput.value, markdownEditor.value, watermarkInput.value);
-            } else {
-                // Save new essay
-                cms.addEssay(titleInput.value, markdownEditor.value, watermarkInput.value);
-            }
+        const savePromise = editEssayId 
+            ? cms.updateEssay(editEssayId, titleInput.value, markdownEditor.value, watermarkInput.value)
+            : cms.addEssay(titleInput.value, markdownEditor.value, watermarkInput.value);
 
+        savePromise.then(() => {
             essayPublishBtn.textContent = editEssayId ? 'UPDATED SUCCESSFULLY!' : 'PUBLISHED SUCCESSFULLY!';
             essayPublishBtn.classList.add('bg-secondary', 'text-on-secondary');
 
@@ -542,7 +538,14 @@
                 // Redirect to admin management dashboard
                 window.location.href = 'admin.html';
             }, 1000);
-        }, 1200);
+        }).catch(err => {
+            console.error("Error publishing essay:", err);
+            essayPublishBtn.innerHTML = 'ERROR SAVING ESSAY';
+            setTimeout(() => {
+                essayPublishBtn.textContent = originalText;
+                essayPublishBtn.disabled = false;
+            }, 2000);
+        });
     });
 
     essayDraftBtn.addEventListener('click', () => {
@@ -591,13 +594,36 @@
 
     function handleFile(file) {
         if (file && file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                previewImg.src = e.target.result;
+            const tempBtn = document.getElementById('art-publish-btn');
+            const originalText = tempBtn ? tempBtn.innerHTML : 'PUBLISH ART';
+            if (tempBtn) {
+                tempBtn.disabled = true;
+                tempBtn.innerHTML = 'COMPRESSING IMAGE...';
+            }
+            
+            cms.compressImage(file, 1200, 1200, 0.75).then(compressedBase64 => {
+                previewImg.src = compressedBase64;
                 previewImg.classList.remove('hidden');
                 placeholder.classList.add('hidden');
-            };
-            reader.readAsDataURL(file);
+                if (tempBtn) {
+                    tempBtn.disabled = false;
+                    tempBtn.innerHTML = originalText;
+                }
+            }).catch(err => {
+                console.error("Error compressing image:", err);
+                // Fallback to normal read
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImg.src = e.target.result;
+                    previewImg.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
+                    if (tempBtn) {
+                        tempBtn.disabled = false;
+                        tempBtn.innerHTML = originalText;
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
         }
     }
 
@@ -624,23 +650,21 @@
         artPublishBtn.disabled = true;
         artPublishBtn.innerHTML = 'PUBLISHING...';
 
-        setTimeout(() => {
-            const dateVal = dateInput && dateInput.value ? dateInput.value.split('-')[0] : new Date().getFullYear().toString();
-            const mediumVal = (mediumSelect && mediumSelect.options[mediumSelect.selectedIndex]?.text) || 'Mixed Media';
-            const tagsVal = tagsInput ? tagsInput.value : 'Curated';
-            const descVal = descTextarea ? descTextarea.value : '';
-            const previewSrc = previewImg ? previewImg.src : '';
-            
-            // Add artwork to CMS
-            cms.addArtwork(
-                titleInput.value,
-                dateVal,
-                mediumVal,
-                tagsVal,
-                descVal,
-                previewSrc
-            );
-
+        const dateVal = dateInput && dateInput.value ? dateInput.value.split('-')[0] : new Date().getFullYear().toString();
+        const mediumVal = (mediumSelect && mediumSelect.options[mediumSelect.selectedIndex]?.text) || 'Mixed Media';
+        const tagsVal = tagsInput ? tagsInput.value : 'Curated';
+        const descVal = descTextarea ? descTextarea.value : '';
+        const previewSrc = previewImg ? previewImg.src : '';
+        
+        // Add artwork to CMS and await database sync to server
+        cms.addArtwork(
+            titleInput.value,
+            dateVal,
+            mediumVal,
+            tagsVal,
+            descVal,
+            previewSrc
+        ).then(() => {
             artPublishBtn.innerHTML = 'PUBLISHED SUCCESSFULLY!';
             artPublishBtn.classList.add('bg-secondary', 'text-on-secondary');
 
@@ -664,7 +688,14 @@
                 // Redirect to admin dashboard
                 window.location.href = 'admin.html';
             }, 1000);
-        }, 1200);
+        }).catch(err => {
+            console.error("Error publishing artwork:", err);
+            artPublishBtn.innerHTML = 'ERROR PUBLISHING ART';
+            setTimeout(() => {
+                artPublishBtn.innerHTML = originalText;
+                artPublishBtn.disabled = false;
+            }, 2000);
+        });
     });
 
     artDraftBtn.addEventListener('click', () => {

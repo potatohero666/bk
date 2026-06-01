@@ -136,7 +136,7 @@ const CMS_DEFAULT_MESSAGES = [
 
 function syncToServer() {
     if (typeof window !== 'undefined' && window.__CMS_DATA__) {
-        fetch('/api/save', {
+        return fetch('/api/save', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -148,20 +148,37 @@ function syncToServer() {
                 messages: localStorage.getItem('aesthete_messages') ? JSON.parse(localStorage.getItem('aesthete_messages')) : [],
                 deleted_messages: localStorage.getItem('aesthete_deleted_messages') ? JSON.parse(localStorage.getItem('aesthete_deleted_messages')) : []
             })
-        }).catch(err => console.error("Error syncing database to server:", err));
+        })
+        .then(res => res.json())
+        .catch(err => {
+            console.error("Error syncing database to server:", err);
+            throw err;
+        });
     }
+    return Promise.resolve({ success: true, localOnly: true });
 }
 
 // Synchronize server database data into LocalStorage on load if __CMS_DATA__ is present
 if (typeof window !== 'undefined' && window.__CMS_DATA__) {
     const data = window.__CMS_DATA__;
-    if (data.profile) localStorage.setItem('aesthete_profile', JSON.stringify(data.profile));
-    if (data.essays) localStorage.setItem('aesthete_essays', JSON.stringify(data.essays));
-    if (data.artworks) localStorage.setItem('aesthete_artworks', JSON.stringify(data.artworks));
-    if (data.deleted_essays) localStorage.setItem('aesthete_deleted_essays', JSON.stringify(data.deleted_essays));
-    if (data.deleted_artworks) localStorage.setItem('aesthete_deleted_artworks', JSON.stringify(data.deleted_artworks));
-    if (data.messages) localStorage.setItem('aesthete_messages', JSON.stringify(data.messages));
-    if (data.deleted_messages) localStorage.setItem('aesthete_deleted_messages', JSON.stringify(data.deleted_messages));
+    
+    // Check if server is completely unpopulated (fresh start) but client has existing data
+    const clientHasData = localStorage.getItem('aesthete_essays') && JSON.parse(localStorage.getItem('aesthete_essays')).length > 0;
+    const serverIsEmpty = (!data.essays || data.essays.length === 0) && (!data.artworks || data.artworks.length === 0);
+    
+    if (clientHasData && serverIsEmpty) {
+        // Trigger sync from client to server so the server database gets populated with client's data!
+        setTimeout(() => syncToServer(), 500);
+    } else {
+        // Standard pull from server to client
+        if (data.profile) localStorage.setItem('aesthete_profile', JSON.stringify(data.profile));
+        if (data.essays) localStorage.setItem('aesthete_essays', JSON.stringify(data.essays));
+        if (data.artworks) localStorage.setItem('aesthete_artworks', JSON.stringify(data.artworks));
+        if (data.deleted_essays) localStorage.setItem('aesthete_deleted_essays', JSON.stringify(data.deleted_essays));
+        if (data.deleted_artworks) localStorage.setItem('aesthete_deleted_artworks', JSON.stringify(data.deleted_artworks));
+        if (data.messages) localStorage.setItem('aesthete_messages', JSON.stringify(data.messages));
+        if (data.deleted_messages) localStorage.setItem('aesthete_deleted_messages', JSON.stringify(data.deleted_messages));
+    }
 }
 
 const cms = {
@@ -198,8 +215,7 @@ const cms = {
 
         custom.unshift(newMsg);
         localStorage.setItem('aesthete_messages', JSON.stringify(custom));
-        syncToServer();
-        return newMsg;
+        return syncToServer().then(() => newMsg);
     },
 
     deleteMessage(id) {
@@ -214,8 +230,7 @@ const cms = {
             deleted.push(id);
             localStorage.setItem('aesthete_deleted_messages', JSON.stringify(deleted));
         }
-        syncToServer();
-        return true;
+        return syncToServer().then(() => true);
     },
 
     getProfile() {
@@ -232,8 +247,7 @@ const cms = {
             password: password || current.password || "admin"
         };
         localStorage.setItem('aesthete_profile', JSON.stringify(updated));
-        syncToServer();
-        return updated;
+        return syncToServer().then(() => updated);
     },
 
     getEssays() {
@@ -282,8 +296,7 @@ const cms = {
 
         custom.unshift(newEssay);
         localStorage.setItem('aesthete_essays', JSON.stringify(custom));
-        syncToServer();
-        return newEssay;
+        return syncToServer().then(() => newEssay);
     },
 
     updateEssay(id, title, content, char) {
@@ -301,8 +314,7 @@ const cms = {
             custom[idx].char = char || '墨';
             custom[idx].desc = desc;
             localStorage.setItem('aesthete_essays', JSON.stringify(custom));
-            syncToServer();
-            return custom[idx];
+            return syncToServer().then(() => custom[idx]);
         } else {
             // Override a default essay in custom storage
             const defaultEssay = CMS_DEFAULT_ESSAYS.find(e => e.id === id);
@@ -318,8 +330,7 @@ const cms = {
             };
             custom.unshift(overridden);
             localStorage.setItem('aesthete_essays', JSON.stringify(custom));
-            syncToServer();
-            return overridden;
+            return syncToServer().then(() => overridden);
         }
     },
 
@@ -337,8 +348,7 @@ const cms = {
             deleted.push(id);
             localStorage.setItem('aesthete_deleted_essays', JSON.stringify(deleted));
         }
-        syncToServer();
-        return true;
+        return syncToServer().then(() => true);
     },
 
     getArtworks() {
@@ -370,8 +380,7 @@ const cms = {
 
         custom.unshift(newArt);
         localStorage.setItem('aesthete_artworks', JSON.stringify(custom));
-        syncToServer();
-        return newArt;
+        return syncToServer().then(() => newArt);
     },
 
     deleteArtwork(id) {
@@ -388,7 +397,55 @@ const cms = {
             deleted.push(id);
             localStorage.setItem('aesthete_deleted_artworks', JSON.stringify(deleted));
         }
-        syncToServer();
-        return true;
+        return syncToServer().then(() => true);
+    },
+
+    // Premium image compression utility to prevent LocalStorage QuotaExceededError
+    compressImage(fileOrBase64, maxWidth = 1200, maxHeight = 1200, quality = 0.75) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width = Math.round((width * maxHeight) / height);
+                        height = maxHeight;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Export as compressed JPEG
+                const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+                resolve(compressedBase64);
+            };
+            img.onerror = () => {
+                // Fallback to original
+                resolve(typeof fileOrBase64 === 'string' ? fileOrBase64 : '');
+            };
+
+            if (typeof fileOrBase64 === 'string') {
+                img.src = fileOrBase64;
+            } else if (fileOrBase64 instanceof File || fileOrBase64 instanceof Blob) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(fileOrBase64);
+            } else {
+                resolve('');
+            }
+        });
     }
 };

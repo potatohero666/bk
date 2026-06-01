@@ -278,7 +278,8 @@
         // Render Markdown content (robust paragraph and linebreak splitting)
         const bodyEl = document.querySelector('.font-article-body.text-article-body');
         if (bodyEl) {
-            const paragraphs = essay.content.split(/\r?\n\r?\n/);
+            // Split by newlines to handle both single and double line breaks beautifully
+            const paragraphs = essay.content.split(/\r?\n/);
             bodyEl.innerHTML = paragraphs.map(p => {
                 const trimmed = p.trim();
                 if (!trimmed) return '';
@@ -286,11 +287,10 @@
                     return `<blockquote class="my-12 py-4 px-8 border-l border-primary/10 italic text-headline-md font-headline-md text-primary/80">${trimmed.substring(1).trim()}</blockquote>`;
                 }
                 const paragraphContent = trimmed
-                    .replace(/\r?\n/g, '<br>')
                     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
                     .replace(/\*([^*]+)\*/g, '<span class="italic text-primary">$1</span>');
                 return `<p class="mb-8 leading-relaxed font-article-body text-article-body">${paragraphContent}</p>`;
-            }).join('');
+            }).filter(html => html !== '').join('');
         }
 
         // Mouse-parallax effect for the background character

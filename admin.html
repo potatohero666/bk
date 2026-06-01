@@ -738,7 +738,7 @@
         const essaysCount = cms.getEssays().length;
         const artworksCount = cms.getArtworks().length;
 
-        const statsBoxes = document.querySelectorAll('.bg-surface-container.border.border-primary/5');
+        const statsBoxes = document.querySelectorAll('#content-dashboard div.bg-surface-container');
         if (statsBoxes.length >= 3) {
             statsBoxes[0].querySelector('div').innerText = essaysCount;
             statsBoxes[1].querySelector('div').innerText = artworksCount;
@@ -822,10 +822,11 @@
 
     window.deleteEssayItem = function(id) {
         if (confirm('Are you sure you want to delete this essay?')) {
-            cms.deleteEssay(id);
-            refreshDashboardStats();
-            refreshRecentEssays();
-            refreshEssaysTable();
+            cms.deleteEssay(id).then(() => {
+                refreshDashboardStats();
+                refreshRecentEssays();
+                refreshEssaysTable();
+            });
         }
     };
 
@@ -844,35 +845,42 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'SAVING CONFIGURATION...';
 
-            setTimeout(() => {
-                // Save to CMS
-                cms.saveProfile(nameInput.value, bioTextarea.value, avatarPreviewImg.src, passwordInput ? passwordInput.value : null);
-                refreshAdminProfile();
+            cms.saveProfile(nameInput.value, bioTextarea.value, avatarPreviewImg.src, passwordInput ? passwordInput.value : null)
+                .then(() => {
+                    refreshAdminProfile();
 
-                submitBtn.textContent = 'CHANGES SAVED SUCCESSFULLY!';
-                submitBtn.classList.add('bg-secondary', 'text-on-secondary');
+                    submitBtn.textContent = 'CHANGES SAVED SUCCESSFULLY!';
+                    submitBtn.classList.add('bg-secondary', 'text-on-secondary');
 
-                setTimeout(() => {
-                    submitBtn.textContent = originalText;
-                    submitBtn.classList.remove('bg-secondary', 'text-on-secondary');
-                    submitBtn.disabled = false;
-                }, 2000);
-            }, 1000);
+                    setTimeout(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.classList.remove('bg-secondary', 'text-on-secondary');
+                        submitBtn.disabled = false;
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error("Error saving profile:", err);
+                    submitBtn.textContent = 'ERROR SAVING CONFIGURATION';
+                    setTimeout(() => {
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    }, 2000);
+                });
         });
     }
 
-    // Avatar preview upload handler
+    // Avatar preview upload handler with premium image compression
     const avatarUploadInput = document.getElementById('avatar-upload');
     const avatarPreviewImg = document.getElementById('curator-avatar-img');
     if (avatarUploadInput && avatarPreviewImg) {
         avatarUploadInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    avatarPreviewImg.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
+                cms.compressImage(file, 150, 150, 0.8).then(compressedBase64 => {
+                    avatarPreviewImg.src = compressedBase64;
+                }).catch(err => {
+                    console.error("Error compressing avatar image:", err);
+                });
             }
         });
     }
@@ -917,9 +925,10 @@
 
     window.deleteGuestbookItem = function(id) {
         if (confirm('Are you sure you want to delete this guestbook message?')) {
-            cms.deleteMessage(id);
-            refreshDashboardStats();
-            refreshGuestbookTable();
+            cms.deleteMessage(id).then(() => {
+                refreshDashboardStats();
+                refreshGuestbookTable();
+            });
         }
     };
 </script>
