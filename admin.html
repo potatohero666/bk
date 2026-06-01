@@ -136,6 +136,14 @@
             background: #e4e2dd;
             border-radius: 10px;
         }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+        .animate-shake {
+            animation: shake 0.3s ease-in-out;
+        }
     </style>
 </head>
 <body class="font-article-body text-on-background">
@@ -483,6 +491,10 @@
                             <label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest block mb-2">Curator Bio</label>
                             <textarea class="w-full bg-transparent border-0 border-b border-primary/10 py-2 font-article-body text-article-body focus:ring-0 focus:border-secondary transition-all resize-none custom-scrollbar" placeholder="A poetic reflection of your creative vision..." rows="4">Amidst the silence of the gallery, I find the echoes of distant worlds. Curator of light, shadow, and the spaces between words.</textarea>
                         </div>
+                        <div class="group">
+                            <label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest block mb-2">Curator Passcode (后台管理密码)</label>
+                            <input id="curator-password-input" class="w-full bg-transparent border-0 border-b border-primary/10 py-2 font-article-body text-article-body focus:ring-0 focus:border-secondary transition-all" placeholder="Change administrator password..." type="password" value=""/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -547,6 +559,69 @@
 </main>
 
 <script>
+    // --- Curator Passcode Authentication Gate ---
+    (function() {
+        const profile = cms.getProfile();
+        const correctPassword = profile.password || "admin";
+        
+        if (localStorage.getItem('curator_authenticated') !== 'true') {
+            const gateHtml = `
+            <div id="password-gate" class="fixed inset-0 bg-background z-[9999] flex flex-col items-center justify-center p-gutter">
+                <div class="max-w-md w-full space-y-12 text-center">
+                    <span class="font-label-sm text-label-sm text-on-surface-variant opacity-60 tracking-[0.3em] uppercase">Security Clearance</span>
+                    <div class="space-y-4">
+                        <h2 class="font-display-lg text-[32px] md:text-headline-md italic text-primary">Curator Verification</h2>
+                        <p class="font-article-body text-caption text-on-surface-variant max-w-xs mx-auto">Access to the Aesthete Archive requires the Curator's secret key.</p>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="relative flex items-center justify-center pb-2">
+                            <input id="gate-password-input" class="w-full bg-transparent border-none border-b border-primary/20 focus:ring-0 focus:border-secondary py-3 text-center font-serif text-[24px] tracking-widest placeholder:text-on-surface-variant/20 placeholder:font-sans placeholder:text-label-sm placeholder:tracking-widest" placeholder="ENTER SECRET KEY" type="password"/>
+                        </div>
+                        <button id="gate-auth-btn" class="bg-primary text-on-primary py-4 px-12 font-label-sm text-label-sm tracking-[0.2em] uppercase hover:bg-primary-container transition-colors w-full shadow-lg shadow-primary/10">Authenticate</button>
+                        <p id="gate-error-msg" class="text-error font-label-sm text-[10px] tracking-widest uppercase opacity-0 transition-opacity duration-300 mt-2">Invalid Key. Access Denied.</p>
+                    </div>
+                </div>
+            </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', gateHtml);
+
+            const passwordInput = document.getElementById('gate-password-input');
+            const authBtn = document.getElementById('gate-auth-btn');
+            const errorMsg = document.getElementById('gate-error-msg');
+            const gate = document.getElementById('password-gate');
+
+            function attemptAuth() {
+                if (passwordInput.value === correctPassword) {
+                    localStorage.setItem('curator_authenticated', 'true');
+                    gate.classList.add('opacity-0', 'pointer-events-none');
+                    gate.style.transition = 'opacity 0.7s ease';
+                    setTimeout(() => {
+                        gate.remove();
+                    }, 700);
+                } else {
+                    errorMsg.classList.remove('opacity-0');
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                    passwordInput.parentElement.classList.add('animate-shake');
+                    setTimeout(() => {
+                        passwordInput.parentElement.classList.remove('animate-shake');
+                    }, 500);
+                }
+            }
+
+            authBtn.addEventListener('click', attemptAuth);
+            passwordInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') attemptAuth();
+            });
+            
+            // Wait for DOM load to focus nicely
+            window.addEventListener('load', () => {
+                passwordInput.focus();
+            });
+            setTimeout(() => passwordInput.focus(), 100);
+        }
+    })();
+
     // Tab switching engine
     const tabTriggers = document.querySelectorAll('#sidebar-nav .nav-item');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -654,6 +729,9 @@
 
         const bioTextarea = document.querySelector('#content-settings textarea[placeholder="A poetic reflection of your creative vision..."]');
         if (bioTextarea) bioTextarea.value = profile.bio;
+
+        const passwordInput = document.getElementById('curator-password-input');
+        if (passwordInput) passwordInput.value = profile.password || "admin";
     }
 
     function refreshDashboardStats() {
@@ -760,6 +838,7 @@
             const nameInput = document.querySelector('#content-settings input[placeholder="Enter your handle..."]');
             const bioTextarea = document.querySelector('#content-settings textarea[placeholder="A poetic reflection of your creative vision..."]');
             const avatarPreviewImg = document.getElementById('curator-avatar-img');
+            const passwordInput = document.getElementById('curator-password-input');
 
             const originalText = submitBtn.textContent;
             submitBtn.disabled = true;
@@ -767,7 +846,7 @@
 
             setTimeout(() => {
                 // Save to CMS
-                cms.saveProfile(nameInput.value, bioTextarea.value, avatarPreviewImg.src);
+                cms.saveProfile(nameInput.value, bioTextarea.value, avatarPreviewImg.src, passwordInput ? passwordInput.value : null);
                 refreshAdminProfile();
 
                 submitBtn.textContent = 'CHANGES SAVED SUCCESSFULLY!';
