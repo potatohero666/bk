@@ -214,6 +214,22 @@
                 <input class="w-full bg-transparent border-b border-outline/20 py-2 font-headline-md text-headline-md text-center text-primary transition-all focus:border-primary" id="watermark-input" maxlength="1" type="text" value="墨"/>
             </div>
         </div>
+        <!-- Cover Image Selection -->
+        <div class="flex items-center gap-6 bg-surface-container-low p-4 border border-primary/5 rounded-lg">
+            <div class="w-24 h-16 bg-surface-container-high overflow-hidden flex-shrink-0 flex items-center justify-center border border-primary/10 relative group">
+                <img id="essay-hero-preview" class="w-full h-full object-cover hidden" src=""/>
+                <span id="essay-hero-placeholder" class="material-symbols-outlined text-secondary opacity-40">image</span>
+            </div>
+            <div class="flex-1">
+                <span class="block font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-1 opacity-60">Essay Cover Image (Hero Image)</span>
+                <span class="block font-caption text-[11px] text-on-surface-variant/50 mb-3">Optional. Upload a custom hero header image for this essay. Defaults to preset abstract art.</span>
+                <div class="flex gap-3">
+                    <button type="button" onclick="document.getElementById('essay-hero-file').click()" class="px-4 py-1.5 border border-primary/10 font-label-sm text-[10px] tracking-wider text-primary hover:bg-primary hover:text-on-primary transition-all uppercase">Upload Cover</button>
+                    <button type="button" id="essay-hero-clear" class="px-4 py-1.5 border border-error/10 font-label-sm text-[10px] tracking-wider text-error hover:bg-error hover:text-on-error transition-all uppercase hidden">Clear</button>
+                    <input type="file" id="essay-hero-file" accept="image/*" class="hidden"/>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- Main Editor Interface -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 h-[calc(100vh-320px)] min-h-[600px]">
@@ -411,23 +427,39 @@
     editor.addEventListener('input', (e) => {
         const text = e.target.value;
         
-        let html = text
-            .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-            .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-            .replace(/^\> (.*$)/gim, '<blockquote class="border-l-2 border-primary/20 pl-4 italic my-4">$1</blockquote>')
-            .replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>')
-            .replace(/\*(.*)\*/gim, '<em>$1</em>')
-            .replace(/\n$/gim, '<br />')
-            .replace(/\n/gim, '<p></p>');
-
         if (text.trim() === '') {
             preview.innerHTML = '<p class="italic opacity-40">Your words will appear here in the curated aesthetic...</p>';
             wordCount.innerText = '0 words';
-        } else {
-            preview.innerHTML = html;
-            const words = text.trim().split(/\s+/).length;
-            wordCount.innerText = `${words} words`;
+            return;
         }
+
+        const paragraphs = text.split(/\r?\n/);
+        const html = paragraphs.map(p => {
+            const trimmed = p.trim();
+            if (!trimmed) return '';
+            
+            if (trimmed.startsWith('# ')) {
+                return `<h1 class="font-display-lg text-[32px] text-primary my-6">${trimmed.substring(2).trim()}</h1>`;
+            }
+            if (trimmed.startsWith('## ')) {
+                return `<h2 class="font-headline-md text-[24px] text-primary my-4">${trimmed.substring(3).trim()}</h2>`;
+            }
+            if (trimmed.startsWith('>')) {
+                return `<blockquote class="border-l-2 border-primary/20 pl-4 italic my-6 text-headline-md font-headline-md text-primary/80">${trimmed.substring(1).trim()}</blockquote>`;
+            }
+
+            let paragraphContent = trimmed
+                .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="my-4 max-w-full h-auto rounded border border-primary/5 mx-auto shadow-sm" />')
+                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary underline" target="_blank">$1</a>')
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*([^*]+)\*/g, '<span class="italic text-primary">$1</span>');
+
+            return `<p class="mb-4 leading-relaxed font-article-body text-article-body">${paragraphContent}</p>`;
+        }).filter(h => h !== '').join('');
+
+        preview.innerHTML = html;
+        const words = text.trim().split(/\s+/).length;
+        wordCount.innerText = `${words} words`;
     });
 
     watermarkInput.addEventListener('input', (e) => {
@@ -436,6 +468,56 @@
             dynamicWatermark.innerText = char;
         }
     });
+
+    // Essay cover image triggers & bindings
+    const essayHeroFile = document.getElementById('essay-hero-file');
+    const essayHeroPreview = document.getElementById('essay-hero-preview');
+    const essayHeroPlaceholder = document.getElementById('essay-hero-placeholder');
+    const essayHeroClear = document.getElementById('essay-hero-clear');
+    let essayHeroBase64 = null;
+
+    if (essayHeroFile) {
+        essayHeroFile.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const originalText = essayPublishBtn ? essayPublishBtn.textContent : 'Publish Essay';
+                if (essayPublishBtn) {
+                    essayPublishBtn.disabled = true;
+                    essayPublishBtn.textContent = 'COMPRESSING COVER...';
+                }
+
+                cms.compressImage(file, 1200, 800, 0.75).then(compressedBase64 => {
+                    essayHeroBase64 = compressedBase64;
+                    essayHeroPreview.src = compressedBase64;
+                    essayHeroPreview.classList.remove('hidden');
+                    essayHeroPlaceholder.classList.add('hidden');
+                    essayHeroClear.classList.remove('hidden');
+                    
+                    if (essayPublishBtn) {
+                        essayPublishBtn.disabled = false;
+                        essayPublishBtn.textContent = originalText;
+                    }
+                }).catch(err => {
+                    console.error("Error compressing cover image:", err);
+                    if (essayPublishBtn) {
+                        essayPublishBtn.disabled = false;
+                        essayPublishBtn.textContent = originalText;
+                    }
+                });
+            }
+        });
+    }
+
+    if (essayHeroClear) {
+        essayHeroClear.addEventListener('click', () => {
+            essayHeroBase64 = null;
+            if (essayHeroFile) essayHeroFile.value = '';
+            essayHeroPreview.src = '';
+            essayHeroPreview.classList.add('hidden');
+            essayHeroPlaceholder.classList.remove('hidden');
+            essayHeroClear.classList.add('hidden');
+        });
+    }
 
     // Formatting triggers
     document.querySelectorAll('button[title]').forEach(btn => {
@@ -448,10 +530,55 @@
             
             if (action === 'Bold') {
                 editor.value = val.substring(0, start) + '**' + val.substring(start, end) + '**' + val.substring(end);
+                editor.selectionStart = start + 2;
+                editor.selectionEnd = end + 2;
             } else if (action === 'Italic') {
                 editor.value = val.substring(0, start) + '*' + val.substring(start, end) + '*' + val.substring(end);
+                editor.selectionStart = start + 1;
+                editor.selectionEnd = end + 1;
+            } else if (action === 'Quote') {
+                editor.value = val.substring(0, start) + '\n> ' + val.substring(start, end) + '\n' + val.substring(end);
+                editor.selectionStart = start + 3;
+                editor.selectionEnd = end + 3;
+            } else if (action === 'Link') {
+                const url = prompt("Enter the URL:", "https://");
+                if (url) {
+                    const textSelected = val.substring(start, end) || "link text";
+                    const markdownLink = `[${textSelected}](${url})`;
+                    editor.value = val.substring(0, start) + markdownLink + val.substring(end);
+                    editor.selectionStart = start;
+                    editor.selectionEnd = start + markdownLink.length;
+                }
+            } else if (action === 'Insert Image') {
+                const inlineFileInput = document.createElement('input');
+                inlineFileInput.type = 'file';
+                inlineFileInput.accept = 'image/*';
+                inlineFileInput.onchange = (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const originalText = btn.textContent;
+                        btn.textContent = 'sync';
+                        btn.classList.add('animate-spin');
+                        
+                        cms.compressImage(file, 800, 800, 0.7).then(compressedBase64 => {
+                            const imgMarkdown = `\n![Image](${compressedBase64})\n`;
+                            const currentStart = editor.selectionStart;
+                            const currentEnd = editor.selectionEnd;
+                            editor.value = val.substring(0, currentStart) + imgMarkdown + val.substring(currentEnd);
+                            editor.dispatchEvent(new Event('input'));
+                            btn.textContent = originalText;
+                            btn.classList.remove('animate-spin');
+                        }).catch(err => {
+                            console.error(err);
+                            btn.textContent = originalText;
+                            btn.classList.remove('animate-spin');
+                        });
+                    }
+                };
+                inlineFileInput.click();
             }
             
+            editor.focus();
             editor.dispatchEvent(new Event('input'));
         });
     });
@@ -479,6 +606,15 @@
                 const markdownEditor = document.getElementById('markdown-editor');
                 markdownEditor.value = essay.content || '';
                 
+                // Show cover image
+                if (essay.hero) {
+                    essayHeroBase64 = essay.hero;
+                    essayHeroPreview.src = essay.hero;
+                    essayHeroPreview.classList.remove('hidden');
+                    essayHeroPlaceholder.classList.add('hidden');
+                    essayHeroClear.classList.remove('hidden');
+                }
+
                 // Update dynamic watermark
                 if (dynamicWatermark) {
                     dynamicWatermark.textContent = essay.char || '墨';
@@ -519,8 +655,8 @@
         essayPublishBtn.innerHTML = editEssayId ? 'UPDATING...' : 'PUBLISHING...';
 
         const savePromise = editEssayId 
-            ? cms.updateEssay(editEssayId, titleInput.value, markdownEditor.value, watermarkInput.value)
-            : cms.addEssay(titleInput.value, markdownEditor.value, watermarkInput.value);
+            ? cms.updateEssay(editEssayId, titleInput.value, markdownEditor.value, watermarkInput.value, essayHeroBase64)
+            : cms.addEssay(titleInput.value, markdownEditor.value, watermarkInput.value, essayHeroBase64);
 
         savePromise.then(() => {
             essayPublishBtn.textContent = editEssayId ? 'UPDATED SUCCESSFULLY!' : 'PUBLISHED SUCCESSFULLY!';
@@ -533,6 +669,7 @@
                 
                 titleInput.value = '';
                 markdownEditor.value = '';
+                if (essayHeroClear) essayHeroClear.click();
                 markdownEditor.dispatchEvent(new Event('input'));
                 
                 // Redirect to admin management dashboard

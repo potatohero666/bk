@@ -268,7 +268,7 @@ const cms = {
         return essays.find(e => e.id === id) || CMS_DEFAULT_ESSAYS[0];
     },
 
-    addEssay(title, content, char) {
+    addEssay(title, content, char, heroBase64 = null) {
         const stored = localStorage.getItem('aesthete_essays');
         const custom = stored ? JSON.parse(stored) : [];
         
@@ -291,7 +291,7 @@ const cms = {
             content: content,
             char: char || '墨',
             author: this.getProfile().name,
-            hero: "https://lh3.googleusercontent.com/aida-public/AB6AXuAS8UjoKnNYqA105dSxiS44fPG_AmXcWIKeWPDJBeMpIBxTYuBoQPonxkjALXSNzhEpklABUHj7EpMJwa9Smw7kuSVzkURL9pIJ-at1CHwFR5IJ1eL-rVq4b2MAZ0yMrRSGDYapstlC1p2LxdRYCd-2cgTQSJgOuG62PkNl5pUvEku0xClT9snoRfHhthWaN8UNmv8d3NhwAPI3PVDR-ViYfHPg2xE1rIY8CZMz8iUEpmkDmeY8ZKfoq8MlbYtOOJKl1DhAeiykOQ"
+            hero: heroBase64 || "https://lh3.googleusercontent.com/aida-public/AB6AXuAS8UjoKnNYqA105dSxiS44fPG_AmXcWIKeWPDJBeMpIBxTYuBoQPonxkjALXSNzhEpklABUHj7EpMJwa9Smw7kuSVzkURL9pIJ-at1CHwFR5IJ1eL-rVq4b2MAZ0yMrRSGDYapstlC1p2LxdRYCd-2cgTQSJgOuG62PkNl5pUvEku0xClT9snoRfHhthWaN8UNmv8d3NhwAPI3PVDR-ViYfHPg2xE1rIY8CZMz8iUEpmkDmeY8ZKfoq8MlbYtOOJKl1DhAeiykOQ"
         };
 
         custom.unshift(newEssay);
@@ -299,7 +299,7 @@ const cms = {
         return syncToServer().then(() => newEssay);
     },
 
-    updateEssay(id, title, content, char) {
+    updateEssay(id, title, content, char, heroBase64 = null) {
         const stored = localStorage.getItem('aesthete_essays');
         let custom = stored ? JSON.parse(stored) : [];
         
@@ -313,6 +313,7 @@ const cms = {
             custom[idx].content = content;
             custom[idx].char = char || '墨';
             custom[idx].desc = desc;
+            if (heroBase64) custom[idx].hero = heroBase64;
             localStorage.setItem('aesthete_essays', JSON.stringify(custom));
             return syncToServer().then(() => custom[idx]);
         } else {
@@ -326,7 +327,7 @@ const cms = {
                 content: content,
                 char: char || '墨',
                 author: defaultEssay ? defaultEssay.author : this.getProfile().name,
-                hero: defaultEssay ? defaultEssay.hero : "https://lh3.googleusercontent.com/aida-public/AB6AXuAS8UjoKnNYqA105dSxiS44fPG_AmXcWIKeWPDJBeMpIBxTYuBoQPonxkjALXSNzhEpklABUHj7EpMJwa9Smw7kuSVzkURL9pIJ-at1CHwFR5IJ1eL-rVq4b2MAZ0yMrRSGDYapstlC1p2LxdRYCd-2cgTQSJgOuG62PkNl5pUvEku0xClT9snoRfHhthWaN8UNmv8d3NhwAPI3PVDR-ViYfHPg2xE1rIY8CZMz8iUEpmkDmeY8ZKfoq8MlbYtOOJKl1DhAeiykOQ"
+                hero: heroBase64 || (defaultEssay ? defaultEssay.hero : "https://lh3.googleusercontent.com/aida-public/AB6AXuAS8UjoKnNYqA105dSxiS44fPG_AmXcWIKeWPDJBeMpIBxTYuBoQPonxkjALXSNzhEpklABUHj7EpMJwa9Smw7kuSVzkURL9pIJ-at1CHwFR5IJ1eL-rVq4b2MAZ0yMrRSGDYapstlC1p2LxdRYCd-2cgTQSJgOuG62PkNl5pUvEku0xClT9snoRfHhthWaN8UNmv8d3NhwAPI3PVDR-ViYfHPg2xE1rIY8CZMz8iUEpmkDmeY8ZKfoq8MlbYtOOJKl1DhAeiykOQ")
             };
             custom.unshift(overridden);
             localStorage.setItem('aesthete_essays', JSON.stringify(custom));

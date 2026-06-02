@@ -167,6 +167,11 @@
 <span class="material-symbols-outlined">edit_note</span>
 <span>Essays Management</span>
 </button>
+<!-- Artworks Tab Trigger -->
+<button data-target="artworks" class="nav-item flex w-full items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/30 transition-colors duration-200 font-label-sm text-label-sm rounded-lg text-left">
+<span class="material-symbols-outlined">palette</span>
+<span>Artworks Management</span>
+</button>
 <!-- Guestbook Tab Trigger -->
 <button data-target="guestbook" class="nav-item flex w-full items-center gap-4 px-4 py-3 text-on-surface-variant hover:bg-surface-variant/30 transition-colors duration-200 font-label-sm text-label-sm rounded-lg text-left">
 <span class="material-symbols-outlined">forum</span>
@@ -426,6 +431,41 @@
     </section>
 </div>
 
+<!-- ==================== TAB CONTENT: ARTWORKS ==================== -->
+<div id="content-artworks" class="tab-content flex-1 p-gutter max-w-container-max mx-auto w-full space-y-8 pb-24 relative z-10 hidden">
+    <section class="space-y-2 mt-6">
+        <nav class="flex items-center gap-2 text-on-surface-variant opacity-60">
+            <span class="font-label-sm text-label-sm uppercase tracking-widest">Dashboard</span>
+            <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+            <span class="font-label-sm text-label-sm uppercase tracking-widest">Artworks</span>
+        </nav>
+        <h2 class="font-display-lg text-display-lg text-primary">Artworks Management</h2>
+    </section>
+
+    <!-- Artworks Grid / Table View -->
+    <section>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="border-b border-primary/10">
+                        <th class="pb-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest px-4">Artwork Image & Title</th>
+                        <th class="pb-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest px-4">Medium</th>
+                        <th class="pb-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest px-4">Date</th>
+                        <th class="pb-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest px-4 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="artworks-table-body" class="divide-y divide-primary/5">
+                    <!-- Dynamic rendering -->
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination / Count -->
+        <div class="mt-12 flex items-center justify-between pt-8 border-t border-primary/5">
+            <p id="artworks-count-text" class="font-label-sm text-label-sm text-on-surface-variant opacity-60">Showing artworks...</p>
+        </div>
+    </section>
+</div>
+
 <!-- ==================== TAB CONTENT: GUESTBOOK ==================== -->
 <div id="content-guestbook" class="tab-content flex-1 p-gutter max-w-container-max mx-auto w-full space-y-8 pb-24 relative z-10 hidden">
     <section class="space-y-2 mt-6">
@@ -630,6 +670,7 @@
     const tabWatermarks = {
         'dashboard': '管',
         'essays': '稿',
+        'artworks': '艺',
         'guestbook': '语',
         'settings': '设'
     };
@@ -707,6 +748,9 @@
 
         // Populate essays table on Management Tab
         refreshEssaysTable();
+
+        // Populate artworks table on Management Tab
+        refreshArtworksTable();
 
         // Populate guestbook table on Management Tab
         refreshGuestbookTable();
@@ -826,6 +870,51 @@
                 refreshDashboardStats();
                 refreshRecentEssays();
                 refreshEssaysTable();
+            });
+        }
+    };
+
+    function refreshArtworksTable() {
+        const artworks = cms.getArtworks();
+        const tbody = document.getElementById('artworks-table-body');
+        if (tbody) {
+            tbody.innerHTML = artworks.map(art => {
+                return `
+                <tr class="group hover:bg-surface-container-low transition-colors" data-id="${art.id}">
+                    <td class="py-6 px-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 h-16 bg-surface-container-high overflow-hidden flex-shrink-0">
+                                <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="${art.image}"/>
+                            </div>
+                            <span class="font-headline-md text-[20px] text-primary">${art.title || 'Untitled'}</span>
+                        </div>
+                    </td>
+                    <td class="py-6 px-4 font-label-sm text-label-sm text-on-surface-variant">${art.medium || 'Mixed Media'}</td>
+                    <td class="py-6 px-4 font-label-sm text-label-sm text-on-surface-variant">${art.date || 'Recent'}</td>
+                    <td class="py-6 px-4 text-right">
+                        <div class="flex items-center justify-end gap-4 opacity-40 group-hover:opacity-100 transition-opacity">
+                            <a href="gallery.html" class="p-2 hover:text-primary transition-colors" title="View"><span class="material-symbols-outlined">visibility</span></a>
+                            <button onclick="deleteArtworkItem('${art.id}')" class="p-2 hover:text-error transition-colors" title="Delete"><span class="material-symbols-outlined">delete</span></button>
+                        </div>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        // Update count text
+        const countText = document.getElementById('artworks-count-text');
+        if (countText) {
+            countText.innerText = `Showing 1 to ${artworks.length} of ${artworks.length} artworks`;
+        }
+    }
+
+    window.deleteArtworkItem = function(id) {
+        if (confirm('Are you sure you want to delete this artwork?')) {
+            cms.deleteArtwork(id).then(() => {
+                refreshDashboardStats();
+                refreshRecentArt();
+                refreshArtworksTable();
             });
         }
     };

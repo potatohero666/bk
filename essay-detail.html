@@ -255,10 +255,10 @@
 
         // Update DOM elements
         const titleEl = document.querySelector('h1.font-display-lg');
-        if (titleEl) titleEl.innerHTML = essay.title.replace(': ', ': <br>');
+        if (titleEl && essay.title) titleEl.innerHTML = essay.title.replace(': ', ': <br>');
         
         const dateEl = document.querySelector('time.font-label-sm');
-        if (dateEl) {
+        if (dateEl && essay.date) {
             dateEl.innerText = essay.date;
             dateEl.setAttribute('datetime', essay.date.replace(/\./g, '-'));
         }
@@ -287,6 +287,8 @@
                     return `<blockquote class="my-12 py-4 px-8 border-l border-primary/10 italic text-headline-md font-headline-md text-primary/80">${trimmed.substring(1).trim()}</blockquote>`;
                 }
                 const paragraphContent = trimmed
+                    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="my-8 max-w-full h-auto rounded border border-primary/5 mx-auto shadow-sm" />')
+                    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary underline hover:opacity-85 transition-opacity" target="_blank">$1</a>')
                     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
                     .replace(/\*([^*]+)\*/g, '<span class="italic text-primary">$1</span>');
                 return `<p class="mb-8 leading-relaxed font-article-body text-article-body">${paragraphContent}</p>`;
