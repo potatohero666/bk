@@ -63,6 +63,10 @@ export default {
     // 2. Serve Static Assets
     // In Workers + Assets, env.ASSETS.fetch is used to fetch the static files
     console.log(`[Worker] Incoming request: ${request.method} ${url.pathname}`);
+    if (!env.ASSETS) {
+      console.error("[Worker] env.ASSETS is undefined! Please ensure 'assets' has a 'binding' declared in wrangler.jsonc.");
+      return new Response("Assets binding missing. Please redeploy with correct wrangler.jsonc.", { status: 500 });
+    }
     const response = await env.ASSETS.fetch(request);
     
     const contentType = response.headers.get('content-type') || '';
