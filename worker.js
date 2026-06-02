@@ -109,6 +109,7 @@ export default {
       // Create a mutable copy of the headers and disable cache for HTML files
       const newHeaders = new Headers(transformedResponse.headers);
       newHeaders.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+      newHeaders.set('Content-Type', 'text/html; charset=utf-8');
 
       return new Response(transformedResponse.body, {
         status: transformedResponse.status,
