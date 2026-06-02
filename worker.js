@@ -63,10 +63,13 @@ export default {
     // 2. Serve Static Assets
     // In Workers + Assets, env.ASSETS.fetch is used to fetch the static files
     const response = await env.ASSETS.fetch(request);
+    
+    // If the response is a 304 Not Modified, we return it directly.
+    // However, to ensure the client gets the latest window.__CMS_DATA__, we disable browser caching for HTML pages.
     const contentType = response.headers.get('content-type') || '';
 
     // If it's an HTML page, inject the database state using HTMLRewriter
-    if (contentType.includes('text/html')) {
+    if (contentType.includes('text/html') && response.status === 200) {
       let dbData = null;
       if (env.AESTHETE_DB) {
         try {
@@ -95,9 +98,19 @@ export default {
         };
       }
 
-      return new HTMLRewriter()
+      const transformedResponse = new HTMLRewriter()
         .on('head', new DBInjector(dbData))
         .transform(response);
+
+      // Create a mutable copy of the headers and disable cache for HTML files
+      const newHeaders = new Headers(transformedResponse.headers);
+      newHeaders.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+
+      return new Response(transformedResponse.body, {
+        status: transformedResponse.status,
+        statusText: transformedResponse.statusText,
+        headers: newHeaders
+      });
     }
 
     return response;
