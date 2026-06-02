@@ -11,11 +11,5 @@
   "main": "worker.js",
   "compatibility_flags": [
     "nodejs_compat"
-  ],
-  "kv_namespaces": [
-    {
-      "binding": "AESTHETE_DB",
-      "id": "aesthete_db_kv"
-    }
   ]
 }
