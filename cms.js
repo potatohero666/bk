@@ -149,9 +149,28 @@ function syncToServer() {
                 deleted_messages: localStorage.getItem('aesthete_deleted_messages') ? JSON.parse(localStorage.getItem('aesthete_deleted_messages')) : []
             })
         })
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) {
+                return res.text().then(text => {
+                    let errMsg = text;
+                    try {
+                        const parsed = JSON.parse(text);
+                        errMsg = parsed.error || text;
+                    } catch (e) {}
+                    throw new Error(errMsg);
+                });
+            }
+            return res.json();
+        })
+        .then(data => {
+            console.log("[CMS] Database synced successfully:", data);
+            return data;
+        })
         .catch(err => {
-            console.error("Error syncing database to server:", err);
+            console.error("[CMS] Error syncing database to server:", err);
+            if (window.location.pathname.includes('admin') || window.location.pathname.includes('editor')) {
+                alert("Database Sync Failed:\n" + err.message + "\n\nPlease ensure your Cloudflare KV namespace is bound correctly.");
+            }
             throw err;
         });
     }

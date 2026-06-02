@@ -9,14 +9,11 @@ class DBInjector {
 
 export async function onRequest(context) {
   const { request, next, env } = context;
-  const url = new URL(request.url);
   
-  // Only intercept HTML pages
-  const isHtml = url.pathname === '/' || url.pathname.endsWith('.html') || (!url.pathname.includes('.') && !url.pathname.startsWith('/api/'));
+  const response = await next();
+  const contentType = response.headers.get('content-type') || '';
   
-  if (isHtml) {
-    const response = await next();
-    
+  if (contentType.includes('text/html')) {
     let dbData = null;
     if (env.AESTHETE_DB) {
       try {
@@ -50,5 +47,5 @@ export async function onRequest(context) {
       .transform(response);
   }
   
-  return next();
+  return response;
 }
