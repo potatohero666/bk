@@ -62,11 +62,11 @@ export default {
 
     // 2. Serve Static Assets
     // In Workers + Assets, env.ASSETS.fetch is used to fetch the static files
+    console.log(`[Worker] Incoming request: ${request.method} ${url.pathname}`);
     const response = await env.ASSETS.fetch(request);
     
-    // If the response is a 304 Not Modified, we return it directly.
-    // However, to ensure the client gets the latest window.__CMS_DATA__, we disable browser caching for HTML pages.
     const contentType = response.headers.get('content-type') || '';
+    console.log(`[Worker] Asset response status: ${response.status}, Content-Type: ${contentType}`);
 
     // If it's an HTML page, inject the database state using HTMLRewriter
     if (contentType.includes('text/html') && response.status === 200) {
