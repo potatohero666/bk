@@ -260,24 +260,36 @@
                 submitBtn.textContent = 'TRANSMITTING...';
                 submitBtn.disabled = true;
 
-                setTimeout(() => {
-                    // Save guestbook entry in CMS
-                    cms.addMessage(name, email, message);
+                // Save guestbook entry in CMS and sync to server
+                cms.addMessage(name, email, message)
+                    .then(() => {
+                        submitBtn.textContent = 'MESSAGE PERSISTED';
+                        submitBtn.classList.add('bg-secondary', 'text-on-secondary');
 
-                    submitBtn.textContent = 'MESSAGE PERSISTED';
-                    submitBtn.classList.add('bg-secondary', 'text-on-secondary');
+                        setTimeout(() => {
+                            // Reset form
+                            form.reset();
+                            submitBtn.textContent = originalText;
+                            submitBtn.classList.remove('bg-secondary', 'text-on-secondary');
+                            submitBtn.disabled = false;
 
-                    setTimeout(() => {
-                        // Reset form
-                        form.reset();
-                        submitBtn.textContent = originalText;
-                        submitBtn.classList.remove('bg-secondary', 'text-on-secondary');
-                        submitBtn.disabled = false;
+                            // Rerender entries
+                            renderGuestbook();
+                        }, 1500);
+                    })
+                    .catch(err => {
+                        console.error("Error submitting guestbook entry:", err);
+                        submitBtn.textContent = 'TRANSMISSION FAILED';
+                        submitBtn.classList.add('bg-error', 'text-on-error');
 
-                        // Rerender entries
-                        renderGuestbook();
-                    }, 1500);
-                }, 1000);
+                        alert("Message Transmission Failed:\n" + err.message + "\n\nPlease ensure your Cloudflare KV namespace is bound correctly.");
+
+                        setTimeout(() => {
+                            submitBtn.textContent = originalText;
+                            submitBtn.classList.remove('bg-error', 'text-on-error');
+                            submitBtn.disabled = false;
+                        }, 3000);
+                    });
             });
         }
     });

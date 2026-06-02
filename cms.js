@@ -110,29 +110,7 @@ const CMS_DEFAULT_ARTWORKS = [
     }
 ];
 
-const CMS_DEFAULT_MESSAGES = [
-    {
-        id: "msg-default-1",
-        name: "Elias Thorne",
-        email: "elias@example.com",
-        message: "The curation here is like a breath of crisp mountain air. Thank you for maintaining such a serene corner of the web.",
-        date: "2024.11.15"
-    },
-    {
-        id: "msg-default-2",
-        name: "Clara M.",
-        email: "clara@example.com",
-        message: "Stumbled upon the gallery while researching minimalism. The interplay of shadow and light in your latest essay really moved me.",
-        date: "2024.10.12"
-    },
-    {
-        id: "msg-default-3",
-        name: "Julian Gray",
-        email: "julian@example.com",
-        message: "A rare find. Quiet luxury indeed.",
-        date: "2024.10.05"
-    }
-];
+const CMS_DEFAULT_MESSAGES = [];
 
 function syncToServer() {
     if (typeof window !== 'undefined' && window.__CMS_DATA__) {
@@ -211,7 +189,7 @@ const cms = {
         // Filter out deleted messages
         const deletedStored = localStorage.getItem('aesthete_deleted_messages');
         const deleted = deletedStored ? JSON.parse(deletedStored) : [];
-        return allMessages.filter(m => !deleted.includes(m.id));
+        return allMessages.filter(m => !deleted.includes(m.id) && !m.id.startsWith('msg-default-'));
     },
 
     addMessage(name, email, message) {

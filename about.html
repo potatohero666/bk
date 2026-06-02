@@ -1,105 +1,112 @@
 <!DOCTYPE html>
 
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>About &amp; Contact | Aesthete</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script src="cms.js"></script>
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "on-error-container": "#93000a",
-                    "on-primary-fixed": "#191c1a",
-                    "error-container": "#ffdad6",
-                    "on-tertiary-fixed": "#2c1600",
-                    "on-primary-fixed-variant": "#444844",
-                    "surface-variant": "#e4e2dd",
-                    "secondary-container": "#d6e7d9",
-                    "primary-fixed-dim": "#c4c7c3",
-                    "on-secondary-container": "#59685d",
-                    "primary-fixed": "#e0e3df",
-                    "primary-container": "#2d312e",
-                    "on-secondary-fixed-variant": "#3b4a40",
-                    "inverse-surface": "#30312e",
-                    "tertiary-container": "#482904",
-                    "on-tertiary-container": "#be8f61",
-                    "outline": "#747874",
-                    "primary": "#181c19",
-                    "inverse-on-surface": "#f2f1ec",
-                    "tertiary-fixed": "#ffdcbd",
-                    "surface-bright": "#fbf9f4",
-                    "surface-dim": "#dbdad5",
-                    "outline-variant": "#c4c7c3",
-                    "surface-tint": "#5b5f5c",
-                    "surface-container-lowest": "#ffffff",
-                    "on-tertiary": "#ffffff",
-                    "surface-container": "#f0eee9",
-                    "error": "#ba1a1a",
-                    "surface-container-low": "#f5f3ee",
-                    "secondary-fixed": "#d6e7d9",
-                    "background": "#fbf9f4",
-                    "surface-container-highest": "#e4e2dd",
-                    "on-surface-variant": "#444844",
-                    "on-secondary": "#ffffff",
-                    "surface-container-high": "#eae8e3",
-                    "on-primary": "#ffffff",
-                    "on-background": "#1b1c19",
-                    "on-tertiary-fixed-variant": "#623f18",
-                    "on-secondary-fixed": "#111e16",
-                    "surface": "#fbf9f4",
-                    "on-error": "#ffffff",
-                    "tertiary": "#2c1600",
-                    "tertiary-fixed-dim": "#f0bd8b",
-                    "secondary-fixed-dim": "#bacbbe",
-                    "on-surface": "#1b1c19",
-                    "on-primary-container": "#959995",
-                    "secondary": "#536257",
-                    "inverse-primary": "#c4c7c3"
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>About &amp; Contact | Aesthete</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="cms.js"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed": "#191c1a",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#2c1600",
+                        "on-primary-fixed-variant": "#444844",
+                        "surface-variant": "#e4e2dd",
+                        "secondary-container": "#d6e7d9",
+                        "primary-fixed-dim": "#c4c7c3",
+                        "on-secondary-container": "#59685d",
+                        "primary-fixed": "#e0e3df",
+                        "primary-container": "#2d312e",
+                        "on-secondary-fixed-variant": "#3b4a40",
+                        "inverse-surface": "#30312e",
+                        "tertiary-container": "#482904",
+                        "on-tertiary-container": "#be8f61",
+                        "outline": "#747874",
+                        "primary": "#181c19",
+                        "inverse-on-surface": "#f2f1ec",
+                        "tertiary-fixed": "#ffdcbd",
+                        "surface-bright": "#fbf9f4",
+                        "surface-dim": "#dbdad5",
+                        "outline-variant": "#c4c7c3",
+                        "surface-tint": "#5b5f5c",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#f0eee9",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f5f3ee",
+                        "secondary-fixed": "#d6e7d9",
+                        "background": "#fbf9f4",
+                        "surface-container-highest": "#e4e2dd",
+                        "on-surface-variant": "#444844",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#eae8e3",
+                        "on-primary": "#ffffff",
+                        "on-background": "#1b1c19",
+                        "on-tertiary-fixed-variant": "#623f18",
+                        "on-secondary-fixed": "#111e16",
+                        "surface": "#fbf9f4",
+                        "on-error": "#ffffff",
+                        "tertiary": "#2c1600",
+                        "tertiary-fixed-dim": "#f0bd8b",
+                        "secondary-fixed-dim": "#bacbbe",
+                        "on-surface": "#1b1c19",
+                        "on-primary-container": "#959995",
+                        "secondary": "#536257",
+                        "inverse-primary": "#c4c7c3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-max": "1120px",
+                        "gallery-gap": "1rem",
+                        "gutter": "2rem",
+                        "section-gap-sm": "4rem",
+                        "section-gap-lg": "8rem",
+                        "article-max": "720px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Libre Caslon Text"],
+                        "article-body": ["Inter"],
+                        "display-lg": ["Libre Caslon Text"],
+                        "label-sm": ["Inter"],
+                        "caption": ["Inter"],
+                        "display-lg-mobile": ["Libre Caslon Text"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "400" }],
+                        "article-body": ["18px", { "lineHeight": "1.75", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+                        "display-lg": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "600" }],
+                        "caption": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "display-lg-mobile": ["40px", { "lineHeight": "1.2", "fontWeight": "400" }]
+                    }
+                },
             },
-            "borderRadius": {
-                    "DEFAULT": "0.125rem",
-                    "lg": "0.25rem",
-                    "xl": "0.5rem",
-                    "full": "0.75rem"
-            },
-            "spacing": {
-                    "container-max": "1120px",
-                    "gallery-gap": "1rem",
-                    "gutter": "2rem",
-                    "section-gap-sm": "4rem",
-                    "section-gap-lg": "8rem",
-                    "article-max": "720px"
-            },
-            "fontFamily": {
-                    "headline-md": ["Libre Caslon Text"],
-                    "article-body": ["Inter"],
-                    "display-lg": ["Libre Caslon Text"],
-                    "label-sm": ["Inter"],
-                    "caption": ["Inter"],
-                    "display-lg-mobile": ["Libre Caslon Text"]
-            },
-            "fontSize": {
-                    "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "400"}],
-                    "article-body": ["18px", {"lineHeight": "1.75", "letterSpacing": "-0.01em", "fontWeight": "400"}],
-                    "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "400"}],
-                    "label-sm": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "600"}],
-                    "caption": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500"}],
-                    "display-lg-mobile": ["40px", {"lineHeight": "1.2", "fontWeight": "400"}]
-            }
-          },
-        },
-      }
+        }
     </script>
-<style>
+    <style>
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
         }
+
         .chinese-bg {
             font-family: serif;
             font-size: 80vh;
@@ -112,22 +119,27 @@
             pointer-events: none;
             user-select: none;
         }
+
         ::selection {
             background: #d6e7d9;
             color: #181c19;
         }
+
         body {
             cursor: default;
         }
+
         .reveal {
             opacity: 0;
             transform: translateY(20px);
             transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
+
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
         }
+
         .input-underline {
             border-top: none;
             border-left: none;
@@ -135,285 +147,391 @@
             border-bottom: 1px solid rgba(24, 28, 25, 0.1);
             background: transparent !important;
         }
+
         .input-underline:focus {
             outline: none;
             box-shadow: none;
-            border-bottom-color: #536257; /* Sage Green */
+            border-bottom-color: #536257;
+            /* Sage Green */
         }
     </style>
 </head>
+
 <body class="bg-surface text-on-surface font-article-body selection:bg-secondary-container overflow-x-hidden">
-<!-- Atmospheric Background Element -->
-<div class="chinese-bg">我</div>
-<!-- TopAppBar -->
-<header class="w-full top-0 sticky z-50 bg-surface/90 backdrop-blur-md transition-all duration-500 ease-in-out">
-<div class="flex justify-between items-center w-full px-gutter py-8 max-w-container-max mx-auto">
-<a class="font-display-lg text-headline-md italic text-primary" href="index.html">Aesthete</a>
-<nav class="hidden md:flex gap-12">
-<a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300" href="gallery.html">Art</a>
-<a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300" href="essays.html">Writing</a>
-<a class="font-label-sm text-label-sm uppercase tracking-widest text-primary italic font-medium" href="about.html">About</a>
-<a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300" href="explore.html">Archive</a>
-<a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300" href="contact.html">Guestbook</a>
-</nav>
-<div class="flex gap-6 items-center">
-<a href="explore.html" class="material-symbols-outlined text-primary hover:opacity-70 transition-opacity" data-icon="search">search</a>
-<button class="material-symbols-outlined text-primary hover:opacity-70 transition-opacity" data-icon="menu">menu</button>
-</div>
-</div>
-</header>
-<main class="max-w-container-max mx-auto px-gutter">
-<!-- Hero Header -->
-<section class="section-gap-sm pt-20 pb-20 md:pt-32 md:pb-16 reveal" id="hero">
-<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg tracking-tighter text-primary">
+    <!-- Atmospheric Background Element -->
+    <div class="chinese-bg">我</div>
+    <!-- TopAppBar -->
+    <header class="w-full top-0 sticky z-50 bg-surface/90 backdrop-blur-md transition-all duration-500 ease-in-out">
+        <div class="flex justify-between items-center w-full px-gutter py-8 max-w-container-max mx-auto">
+            <a class="font-display-lg text-headline-md italic text-primary" href="index.html">Aesthete</a>
+            <nav class="hidden md:flex gap-12">
+                <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300"
+                    href="gallery.html">Art</a>
+                <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300"
+                    href="essays.html">Writing</a>
+                <a class="font-label-sm text-label-sm uppercase tracking-widest text-primary italic font-medium"
+                    href="about.html">About</a>
+                <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300"
+                    href="explore.html">Archive</a>
+                <a class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors duration-300"
+                    href="contact.html">Guestbook</a>
+            </nav>
+            <div class="flex gap-6 items-center">
+                <a href="explore.html"
+                    class="material-symbols-outlined text-primary hover:opacity-70 transition-opacity"
+                    data-icon="search">search</a>
+                <button class="material-symbols-outlined text-primary hover:opacity-70 transition-opacity"
+                    data-icon="menu">menu</button>
+            </div>
+        </div>
+    </header>
+    <main class="max-w-container-max mx-auto px-gutter">
+        <!-- Hero Header -->
+        <section class="section-gap-sm pt-20 pb-20 md:pt-32 md:pb-16 reveal" id="hero">
+            <h1 class="font-display-lg text-display-lg-mobile md:text-display-lg tracking-tighter text-primary">
                 The Curator
             </h1>
-<div class="mt-4 w-12 h-px bg-primary/20"></div>
-</section>
-<!-- Profile Section -->
-<section class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-24 items-start section-gap-lg reveal">
-<div class="md:col-span-5 relative group">
-<div class="absolute -inset-4 border border-primary/5 rounded-lg -z-10 transition-transform duration-700 group-hover:scale-105"></div>
-<img alt="Author Portrait" class="w-full aspect-[4/5] object-cover rounded-sm grayscale-[0.3] hover:grayscale-0 transition-all duration-700" src="https://lh3.googleusercontent.com/aida/ADBb0ugNErUfyEWDvSJHYEhHX61AaSnrzwNj0ker8nxV8AVCLFjSTf1mnCB-j4AcsRw8KzepabZrkQVk0xTI0EX30TQ4wBbsoX-KeHN77rDw8_-CqO6cNeWzfR3rK-h_4mbwCtl39S_cxX5TG_JfdKE5oZrL2ZsdyZLohbIVVTvwOBFbbTWSKzKJJrJLp9otkby3HCqiI8Gz33V_uyBeZj-IhiwCbOr1K4waprgjlWVpK1LGkZOPC9FK__pe5w"/>
-<p class="font-label-sm text-label-sm uppercase mt-6 tracking-widest text-outline">EST. MCMLXXXIX</p>
-</div>
-<div class="md:col-span-7 flex flex-col justify-center">
-<h2 class="font-headline-md text-headline-md mb-8 text-primary italic">In the quiet space between ink and silence, we find ourselves.</h2>
-<div class="space-y-6 text-on-surface-variant max-w-article-max">
-<p class="font-article-body text-article-body leading-relaxed">
-                        To curate is to care. My work stems from an obsession with the subtle—the way shadow falls across a raw canvas, the rhythm of a well-placed semicolon, and the profound stillness that follows a creative epiphany.
+            <div class="mt-4 w-12 h-px bg-primary/20"></div>
+        </section>
+        <!-- Profile Section -->
+        <section class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-24 items-start section-gap-lg reveal">
+            <div class="md:col-span-5 relative group">
+                <div
+                    class="absolute -inset-4 border border-primary/5 rounded-lg -z-10 transition-transform duration-700 group-hover:scale-105">
+                </div>
+                <img alt="Author Portrait"
+                    class="w-full aspect-[4/5] object-cover rounded-sm grayscale-[0.3] hover:grayscale-0 transition-all duration-700"
+                    src="https://lh3.googleusercontent.com/aida/ADBb0ugNErUfyEWDvSJHYEhHX61AaSnrzwNj0ker8nxV8AVCLFjSTf1mnCB-j4AcsRw8KzepabZrkQVk0xTI0EX30TQ4wBbsoX-KeHN77rDw8_-CqO6cNeWzfR3rK-h_4mbwCtl39S_cxX5TG_JfdKE5oZrL2ZsdyZLohbIVVTvwOBFbbTWSKzKJJrJLp9otkby3HCqiI8Gz33V_uyBeZj-IhiwCbOr1K4waprgjlWVpK1LGkZOPC9FK__pe5w" />
+                <p class="font-label-sm text-label-sm uppercase mt-6 tracking-widest text-outline">EST. MCMLXXXIX</p>
+            </div>
+            <div class="md:col-span-7 flex flex-col justify-center">
+                <h2 class="font-headline-md text-headline-md mb-8 text-primary italic">In the quiet space between ink
+                    and silence, we find ourselves.</h2>
+                <div class="space-y-6 text-on-surface-variant max-w-article-max">
+                    <p class="font-article-body text-article-body leading-relaxed">
+                        To curate is to care. My work stems from an obsession with the subtle—the way shadow falls
+                        across a raw canvas, the rhythm of a well-placed semicolon, and the profound stillness that
+                        follows a creative epiphany.
                     </p>
-<p class="font-article-body text-article-body leading-relaxed">
-                        Born from a lineage of bibliophiles and painters, I've spent my life navigating the intersection of the tactile and the digital. Aesthete is my digital sanctuary, an archive of fleeting thoughts and enduring impressions. Here, I explore the convergence of classical aesthetics and the chaotic beauty of contemporary existence.
+                    <p class="font-article-body text-article-body leading-relaxed">
+                        Born from a lineage of bibliophiles and painters, I've spent my life navigating the intersection
+                        of the tactile and the digital. Aesthete is my digital sanctuary, an archive of fleeting
+                        thoughts and enduring impressions. Here, I explore the convergence of classical aesthetics and
+                        the chaotic beauty of contemporary existence.
                     </p>
-</div>
-</div>
-</section>
-<!-- Philosophy / Manifesto -->
-<section class="section-gap-lg reveal">
-<div class="bg-surface-container-low p-8 md:p-20 border border-primary/5 relative overflow-hidden">
-<div class="max-w-article-max mx-auto text-center">
-<span class="font-label-sm text-label-sm uppercase tracking-[0.3em] text-outline mb-12 block">Manifesto</span>
-<blockquote class="font-headline-md text-headline-md text-primary leading-snug">
-                        "Beauty is not a luxury; it is a necessity for the soul's survival in an increasingly mechanical world. We seek the patina of time and the sharpness of modern vision."
+                </div>
+            </div>
+        </section>
+        <!-- Philosophy / Manifesto -->
+        <section class="section-gap-lg reveal">
+            <div class="bg-surface-container-low p-8 md:p-20 border border-primary/5 relative overflow-hidden">
+                <div class="max-w-article-max mx-auto text-center">
+                    <span
+                        class="font-label-sm text-label-sm uppercase tracking-[0.3em] text-outline mb-12 block">Manifesto</span>
+                    <blockquote class="font-headline-md text-headline-md text-primary leading-snug">
+                        "I wrote a bunch of things I'm not satisfied with and piled them up here.
+                        I want to force you to watch"
                     </blockquote>
-<div class="mt-12 flex justify-center gap-12">
-<div class="text-center">
-<h3 class="font-label-sm text-label-sm uppercase mb-2">Intent</h3>
-<p class="text-caption text-outline">Purposeful Creation</p>
-</div>
-<div class="text-center">
-<h3 class="font-label-sm text-label-sm uppercase mb-2">Form</h3>
-<p class="text-caption text-outline">Structural Elegance</p>
-</div>
-<div class="text-center">
-<h3 class="font-label-sm text-label-sm uppercase mb-2">Legacy</h3>
-<p class="text-caption text-outline">Timeless Thought</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Journey Timeline -->
-<section class="section-gap-lg max-w-article-max mx-auto reveal">
-<h2 class="font-headline-md text-headline-md mb-16 text-primary text-center">The Journey</h2>
-<div class="space-y-16 relative">
-<div class="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-primary/10 -translate-x-1/2 hidden md:block"></div>
-<div class="relative flex flex-col md:flex-row md:justify-between items-start md:items-center group">
-<div class="md:w-[45%] text-left md:text-right">
-<span class="font-label-sm text-label-sm text-outline">2012 — 2015</span>
-<h3 class="font-headline-md text-headline-md text-2xl mt-2 mb-4 group-hover:italic transition-all">The Foundation</h3>
-<p class="text-on-surface-variant font-caption">Studies in Fine Arts and Comparative Literature. A period of deep immersion in the masters, from Caravaggio to Calvino.</p>
-</div>
-<div class="hidden md:block absolute left-1/2 w-4 h-4 rounded-full bg-surface border-2 border-primary -translate-x-1/2 z-10"></div>
-<div class="md:w-[45%]"></div>
-</div>
-<div class="relative flex flex-col md:flex-row-reverse md:justify-between items-start md:items-center group">
-<div class="md:w-[45%] text-left">
-<span class="font-label-sm text-label-sm text-outline">2016 — 2019</span>
-<h3 class="font-headline-md text-headline-md text-2xl mt-2 mb-4 group-hover:italic transition-all">The Wilderness</h3>
-<p class="text-on-surface-variant font-caption">A nomadic phase exploring global design capitals. Writing for independent journals and exhibiting small-scale ink works.</p>
-</div>
-<div class="hidden md:block absolute left-1/2 w-4 h-4 rounded-full bg-surface border-2 border-primary -translate-x-1/2 z-10"></div>
-<div class="md:w-[45%]"></div>
-</div>
-<div class="relative flex flex-col md:flex-row md:justify-between items-start md:items-center group">
-<div class="md:w-[45%] text-left md:text-right">
-<span class="font-label-sm text-label-sm text-outline">2020 — Present</span>
-<h3 class="font-headline-md text-headline-md text-2xl mt-2 mb-4 group-hover:italic transition-all">The Aesthete</h3>
-<p class="text-on-surface-variant font-caption">Synthesizing years of observation into a single platform. Aesthete becomes the definitive archive of my ongoing dialogue with art.</p>
-</div>
-<div class="hidden md:block absolute left-1/2 w-4 h-4 rounded-full bg-primary -translate-x-1/2 z-10"></div>
-<div class="md:w-[45%]"></div>
-</div>
-</div>
-</section>
+                    <div class="mt-12 flex justify-center gap-12">
+                        <div class="text-center">
+                            <h3 class="font-label-sm text-label-sm uppercase mb-2">Intent</h3>
+                            <p class="text-caption text-outline">Purposeful Creation</p>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="font-label-sm text-label-sm uppercase mb-2">Form</h3>
+                            <p class="text-caption text-outline">Structural Elegance</p>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="font-label-sm text-label-sm uppercase mb-2">Legacy</h3>
+                            <p class="text-caption text-outline">Timeless Thought</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Journey Timeline -->
+        <section class="section-gap-lg max-w-article-max mx-auto reveal">
+            <h2 class="font-headline-md text-headline-md mb-16 text-primary text-center">The Journey</h2>
+            <div class="space-y-16 relative">
+                <div
+                    class="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-primary/10 -translate-x-1/2 hidden md:block">
+                </div>
+                <div class="relative flex flex-col md:flex-row md:justify-between items-start md:items-center group">
+                    <div class="md:w-[45%] text-left md:text-right">
+                        <span class="font-label-sm text-label-sm text-outline">2012 — 2015</span>
+                        <h3
+                            class="font-headline-md text-headline-md text-2xl mt-2 mb-4 group-hover:italic transition-all">
+                            The Foundation</h3>
+                        <p class="text-on-surface-variant font-caption">When I was in elementary school, I would
+                            daydream all the time.</p>
+                    </div>
+                    <div
+                        class="hidden md:block absolute left-1/2 w-4 h-4 rounded-full bg-surface border-2 border-primary -translate-x-1/2 z-10">
+                    </div>
+                    <div class="md:w-[45%]"></div>
+                </div>
+                <div
+                    class="relative flex flex-col md:flex-row-reverse md:justify-between items-start md:items-center group">
+                    <div class="md:w-[45%] text-left">
+                        <span class="font-label-sm text-label-sm text-outline">2016 — 2019</span>
+                        <h3
+                            class="font-headline-md text-headline-md text-2xl mt-2 mb-4 group-hover:italic transition-all">
+                            The Wilderness</h3>
+                        <p class="text-on-surface-variant font-caption">In middle school, I would daydream all day and
+                            write all sorts of random nonsense.</p>
+                    </div>
+                    <div
+                        class="hidden md:block absolute left-1/2 w-4 h-4 rounded-full bg-surface border-2 border-primary -translate-x-1/2 z-10">
+                    </div>
+                    <div class="md:w-[45%]"></div>
+                </div>
+                <div class="relative flex flex-col md:flex-row md:justify-between items-start md:items-center group">
+                    <div class="md:w-[45%] text-left md:text-right">
+                        <span class="font-label-sm text-label-sm text-outline">2020 — Present</span>
+                        <h3
+                            class="font-headline-md text-headline-md text-2xl mt-2 mb-4 group-hover:italic transition-all">
+                            Third Rate</h3>
+                        <p class="text-on-surface-variant font-caption">I was in college, and I was in a daze every day.
+                        </p>
+                    </div>
+                    <div
+                        class="hidden md:block absolute left-1/2 w-4 h-4 rounded-full bg-primary -translate-x-1/2 z-10">
+                    </div>
+                    <div class="md:w-[45%]"></div>
+                </div>
+            </div>
+        </section>
 
-<!-- Section 5: Poetic Invitation & Message Form (Integrated Guestbook Form) -->
-<section class="max-w-[720px] mx-auto text-center section-gap-lg pt-12 reveal">
-<div class="w-12 h-px bg-primary/20 mx-auto mb-12"></div>
-<h2 class="font-display-lg text-display-lg-mobile md:text-5xl mb-8 text-primary">A Space for Resonance</h2>
-<p class="font-article-body text-article-body text-on-surface-variant leading-relaxed">
-            Ideas are not solitary entities; they thrive in the currents of exchange. Whether you seek to discuss the intersection of art and digitality, or simply wish to leave a quiet reflection of your visit, your presence here is cherished. 
-        </p>
-<div class="mt-16 text-left">
-<form class="space-y-12">
-<div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-<div class="group">
-<label class="block font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60 mb-2" for="name">Name</label>
-<input class="w-full input-underline py-4 font-article-body text-on-surface focus:border-secondary transition-all" id="name" name="name" placeholder="How shall I address you?" type="text"/>
-</div>
-<div class="group">
-<label class="block font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60 mb-2" for="email">Email</label>
-<input class="w-full input-underline py-4 font-article-body text-on-surface focus:border-secondary transition-all" id="email" name="email" placeholder="Where may I reach you?" type="email"/>
-</div>
-</div>
-<div class="group">
-<label class="block font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60 mb-2" for="message">Message</label>
-<textarea class="w-full input-underline py-4 font-article-body text-on-surface focus:border-secondary transition-all resize-none" id="message" name="message" placeholder="Your thoughts, brief or expansive..." rows="4"></textarea>
-</div>
-<div class="pt-6 flex justify-center">
-<button class="bg-primary text-on-primary px-12 py-5 font-label-sm text-label-sm uppercase tracking-[0.2em] hover:opacity-90 transition-all duration-300 rounded-none" type="submit">
-                    Send Message
+        <!-- Section 5: Poetic Invitation & Message Form (Integrated Guestbook Form) -->
+        <section class="max-w-[720px] mx-auto text-center section-gap-lg pt-12 reveal">
+            <div class="w-12 h-px bg-primary/20 mx-auto mb-12"></div>
+            <h2 class="font-display-lg text-display-lg-mobile md:text-5xl mb-8 text-primary">A Space for Resonance</h2>
+            <p class="font-article-body text-article-body text-on-surface-variant leading-relaxed">
+                you can leave me a message
+                If you've read my stuff and even found it interesting...
+                I'll think about whether I'll have the nerve to reply to you.
+            </p>
+            <div class="mt-16 text-left">
+                <form id="guestbook-form" class="space-y-12">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                        <div class="group">
+                            <label
+                                class="block font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60 mb-2"
+                                for="name">Name</label>
+                            <input
+                                class="w-full input-underline py-4 font-article-body text-on-surface focus:border-secondary transition-all"
+                                id="name" name="name" placeholder="How shall I address you?" type="text" />
+                        </div>
+                        <div class="group">
+                            <label
+                                class="block font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60 mb-2"
+                                for="email">Email</label>
+                            <input
+                                class="w-full input-underline py-4 font-article-body text-on-surface focus:border-secondary transition-all"
+                                id="email" name="email" placeholder="Where may I reach you?" type="email" />
+                        </div>
+                    </div>
+                    <div class="group">
+                        <label
+                            class="block font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant/60 mb-2"
+                            for="message">Message</label>
+                        <textarea
+                            class="w-full input-underline py-4 font-article-body text-on-surface focus:border-secondary transition-all resize-none"
+                            id="message" name="message" placeholder="Your thoughts, brief or expansive..."
+                            rows="4"></textarea>
+                    </div>
+                    <div class="pt-6 flex justify-center">
+                        <button
+                            class="bg-primary text-on-primary px-12 py-5 font-label-sm text-label-sm uppercase tracking-[0.2em] hover:opacity-90 transition-all duration-300 rounded-none"
+                            type="submit">
+                            Send Message
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Section 6: Guestbook Comments -->
+        <section class="max-w-[720px] mx-auto section-gap-lg pt-12 pb-12 reveal">
+            <div
+                class="flex flex-col md:flex-row justify-between items-baseline mb-16 gap-4 border-b border-primary/5 pb-4">
+                <h3 class="font-headline-md text-headline-md text-primary">Guestbook</h3>
+                <span id="entries-count" class="font-label-sm text-label-sm text-on-surface-variant/50 uppercase tracking-widest">Digital
+                    Traces • 0 entries</span>
+            </div>
+            <div id="guestbook-list" class="grid grid-cols-1 gap-12 md:gap-16">
+                <!-- Dynamic Rows Injected Here -->
+            </div>
+            <div class="mt-20 flex justify-center">
+                <button onclick="window.location.href='contact.html'"
+                    class="font-label-sm text-label-sm uppercase tracking-widest text-primary border-b border-primary/20 pb-1 hover:border-primary transition-all duration-300">
+                    View All Entries
                 </button>
-</div>
-</form>
-</div>
-</section>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="w-full mt-section-gap-lg border-t border-primary/5 bg-surface py-12">
+        <div
+            class="flex flex-col md:flex-row justify-between items-center w-full px-gutter max-w-container-max mx-auto">
+            <div class="flex flex-col items-center md:items-start mb-8 md:mb-0">
+                <a class="font-display-lg text-headline-md text-primary mb-4" href="index.html">Aesthete</a>
+                <p class="font-caption text-caption text-outline opacity-80">© 2024 Collected Works. All rights
+                    reserved.</p>
+            </div>
+            <div class="flex gap-12">
+                <a class="font-caption text-caption text-outline hover:text-primary transition-opacity opacity-80 hover:opacity-100"
+                    href="#">Privacy</a>
+                <a class="font-caption text-caption text-outline hover:text-primary transition-opacity opacity-80 hover:opacity-100"
+                    href="#">Terms</a>
+                <a class="font-caption text-caption text-outline hover:text-primary transition-opacity opacity-80 hover:opacity-100"
+                    href="about.html">Contact</a>
+            </div>
+        </div>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load curator profile settings dynamically
+            const profile = cms.getProfile();
 
-<!-- Section 6: Guestbook Comments -->
-<section class="max-w-[720px] mx-auto section-gap-lg pt-12 pb-12 reveal">
-<div class="flex flex-col md:flex-row justify-between items-baseline mb-16 gap-4 border-b border-primary/5 pb-4">
-<h3 class="font-headline-md text-headline-md text-primary">Guestbook</h3>
-<span class="font-label-sm text-label-sm text-on-surface-variant/50 uppercase tracking-widest">Digital Traces • 142 entries</span>
-</div>
-<div class="grid grid-cols-1 gap-12 md:gap-16">
-<!-- Guestbook Entry 1 -->
-<div class="group border-t border-primary/5 pt-12 flex flex-col md:flex-row gap-8">
-<div class="w-full md:w-1/3">
-<p class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant mb-1">Elias Thorne</p>
-<p class="font-caption text-caption text-on-surface-variant/40">Autumn, 2024</p>
-</div>
-<div class="w-full md:w-2/3">
-<blockquote class="font-article-body text-article-body text-on-surface leading-relaxed italic">
-                        "The curation here is like a breath of crisp mountain air. Thank you for maintaining such a serene corner of the web."
-                    </blockquote>
-</div>
-</div>
-<!-- Guestbook Entry 2 -->
-<div class="group border-t border-primary/5 pt-12 flex flex-col md:flex-row gap-8">
-<div class="w-full md:w-1/3">
-<p class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant mb-1">Clara M.</p>
-<p class="font-caption text-caption text-on-surface-variant/40">October 12</p>
-</div>
-<div class="w-full md:w-2/3">
-<blockquote class="font-article-body text-article-body text-on-surface leading-relaxed italic">
-                        "Stumbled upon the gallery while researching minimalism. The interplay of shadow and light in your latest essay really moved me."
-                    </blockquote>
-</div>
-</div>
-<!-- Guestbook Entry 3 -->
-<div class="group border-t border-primary/5 pt-12 flex flex-col md:flex-row gap-8">
-<div class="w-full md:w-1/3">
-<p class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant mb-1">Julian Gray</p>
-<p class="font-caption text-caption text-on-surface-variant/40">October 05</p>
-</div>
-<div class="w-full md:w-2/3">
-<blockquote class="font-article-body text-article-body text-on-surface leading-relaxed italic">
-                        "A rare find. Quiet luxury indeed."
-                    </blockquote>
-</div>
-</div>
-</div>
-<div class="mt-20 flex justify-center">
-<button class="font-label-sm text-label-sm uppercase tracking-widest text-primary border-b border-primary/20 pb-1 hover:border-primary transition-all duration-300">
-                View All Entries
-            </button>
-</div>
-</section>
-</main>
-<!-- Footer -->
-<footer class="w-full mt-section-gap-lg border-t border-primary/5 bg-surface py-12">
-<div class="flex flex-col md:flex-row justify-between items-center w-full px-gutter max-w-container-max mx-auto">
-<div class="flex flex-col items-center md:items-start mb-8 md:mb-0">
-<a class="font-display-lg text-headline-md text-primary mb-4" href="index.html">Aesthete</a>
-<p class="font-caption text-caption text-outline opacity-80">© 2024 Collected Works. All rights reserved.</p>
-</div>
-<div class="flex gap-12">
-<a class="font-caption text-caption text-outline hover:text-primary transition-opacity opacity-80 hover:opacity-100" href="#">Privacy</a>
-<a class="font-caption text-caption text-outline hover:text-primary transition-opacity opacity-80 hover:opacity-100" href="#">Terms</a>
-<a class="font-caption text-caption text-outline hover:text-primary transition-opacity opacity-80 hover:opacity-100" href="about.html">Contact</a>
-</div>
-</div>
-</footer>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Load curator profile settings dynamically
-        const profile = cms.getProfile();
-        
-        const avatarImg = document.querySelector('img[alt="Author Portrait"]');
-        if (avatarImg) avatarImg.src = profile.avatar;
+            const avatarImg = document.querySelector('img[alt="Author Portrait"]');
+            if (avatarImg) avatarImg.src = profile.avatar;
 
-        const bioContainer = document.querySelector('.space-y-6.text-on-surface-variant');
-        if (bioContainer) {
-            bioContainer.innerHTML = `
+            const bioContainer = document.querySelector('.space-y-6.text-on-surface-variant');
+            if (bioContainer) {
+                bioContainer.innerHTML = `
                 <p class="font-article-body text-article-body leading-relaxed">${profile.bio}</p>
-                <p class="font-article-body text-article-body leading-relaxed">Born from a lineage of bibliophiles and painters, I've spent my life navigating the intersection of the tactile and the digital. Aesthete is my digital sanctuary, an archive of fleeting thoughts and enduring impressions.</p>
+                <p class="font-article-body text-article-body leading-relaxed">A knight-errant from the Potato Kingdom who loves to show his trash to everyone.</p>
             `;
-        }
+            }
 
-        // Simple scroll reveal interaction
-        const observerOptions = {
-            threshold: 0.1
-        };
+            // Simple scroll reveal interaction
+            const observerOptions = {
+                threshold: 0.1
+            };
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+            // Magnetic effect for header links (subtle)
+            document.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('mousemove', (e) => {
+                    const rect = link.getBoundingClientRect();
+                    const x = (e.clientX - rect.left - rect.width / 2) * 0.2;
+                    const y = (e.clientY - rect.top - rect.height / 2) * 0.2;
+                    link.style.transform = `translate(${x}px, ${y}px)`;
+                });
+                link.addEventListener('mouseleave', () => {
+                    link.style.transform = `translate(0px, 0px)`;
+                });
             });
-        }, observerOptions);
 
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+            // Initialize dynamic guestbook rendering
+            renderGuestbook();
 
-        // Magnetic effect for header links (subtle)
-        document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('mousemove', (e) => {
-                const rect = link.getBoundingClientRect();
-                const x = (e.clientX - rect.left - rect.width / 2) * 0.2;
-                const y = (e.clientY - rect.top - rect.height / 2) * 0.2;
-                link.style.transform = `translate(${x}px, ${y}px)`;
-            });
-            link.addEventListener('mouseleave', () => {
-                link.style.transform = `translate(0px, 0px)`;
-            });
+            // Intercept form submission and save to CMS
+            const form = document.getElementById('guestbook-form');
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const nameInput = document.getElementById('name');
+                    const emailInput = document.getElementById('email');
+                    const messageInput = document.getElementById('message');
+
+                    const name = nameInput.value.trim();
+                    const email = emailInput.value.trim();
+                    const message = messageInput.value.trim();
+                    if (!name || !email || !message) return;
+
+                    const button = form.querySelector('button[type="submit"]');
+                    const originalText = button.textContent;
+                    button.textContent = 'TRANSMITTING...';
+                    button.disabled = true;
+
+                    // Add guestbook message to CMS
+                    cms.addMessage(name, email, message)
+                        .then(() => {
+                            button.textContent = 'MESSAGE PERSISTED';
+                            button.classList.add('bg-secondary', 'text-on-secondary');
+
+                            setTimeout(() => {
+                                form.reset();
+                                button.textContent = originalText;
+                                button.classList.remove('bg-secondary', 'text-on-secondary');
+                                button.disabled = false;
+                                renderGuestbook();
+                            }, 1500);
+                        })
+                        .catch(err => {
+                            console.error("Error submitting guestbook entry:", err);
+                            button.textContent = 'TRANSMISSION FAILED';
+                            button.classList.add('bg-error', 'text-on-error');
+
+                            alert("Message Transmission Failed:\n" + err.message + "\n\nPlease ensure your Cloudflare KV namespace is bound correctly.");
+
+                            setTimeout(() => {
+                                button.textContent = originalText;
+                                button.classList.remove('bg-error', 'text-on-error');
+                                button.disabled = false;
+                            }, 3000);
+                        });
+                });
+            }
         });
 
-        // Intercept form submission and show subtle toast
-        const form = document.querySelector('form');
-        if (form) {
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const message = document.getElementById('message').value;
-                if (!name || !email || !message) return;
-                
-                const button = form.querySelector('button[type="submit"]');
-                const originalText = button.textContent;
-                button.textContent = 'MESSAGE SENT';
-                button.classList.add('bg-secondary', 'text-on-secondary');
-                button.disabled = true;
-                
-                setTimeout(() => {
-                    form.reset();
-                    button.textContent = originalText;
-                    button.classList.remove('bg-secondary', 'text-on-secondary');
-                    button.disabled = false;
-                }, 3000);
-            });
+        function renderGuestbook() {
+            const messages = cms.getMessages();
+            
+            // Update total entries count text
+            const countSpan = document.getElementById('entries-count');
+            if (countSpan) {
+                countSpan.textContent = `Digital Traces • ${messages.length} entries`;
+            }
+
+            // Render list (showing max 5 recent comments on About page, view all redirects to contact)
+            const listContainer = document.getElementById('guestbook-list');
+            if (listContainer) {
+                const displayMessages = messages.slice(0, 5);
+                if (displayMessages.length === 0) {
+                    listContainer.innerHTML = `
+                        <div class="text-center py-12 border-t border-primary/5">
+                            <p class="font-article-body text-article-body text-on-surface-variant/40 italic">The guestbook is currently silent. Leave the first mark.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                listContainer.innerHTML = displayMessages.map(msg => {
+                    const dateParts = msg.date ? msg.date.split('.') : ['2026', '06', '01'];
+                    const monthIdx = parseInt(dateParts[1] || '6', 10) - 1;
+                    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                    const monthName = monthNames[monthIdx] || 'Jun';
+                    const formattedDate = `${monthName} ${dateParts[2] || '01'}, ${dateParts[0] || '2026'}`;
+
+                    return `
+                        <div class="group border-t border-primary/5 pt-12 flex flex-col md:flex-row gap-8 reveal active">
+                            <div class="w-full md:w-1/3">
+                                <p class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-semibold mb-1">${msg.name}</p>
+                                <p class="font-caption text-caption text-on-surface-variant/40">${formattedDate}</p>
+                            </div>
+                            <div class="w-full md:w-2/3">
+                                <blockquote class="font-article-body text-article-body text-on-surface leading-relaxed italic">
+                                    "${msg.message}"
+                                </blockquote>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
         }
-    });
-</script>
-</body></html>
+    </script>
+</body>
+
+</html>
