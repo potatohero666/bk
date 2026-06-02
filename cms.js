@@ -310,7 +310,7 @@ const cms = {
             content: content,
             char: char || '墨',
             author: this.getProfile().name,
-            hero: heroBase64 || "https://lh3.googleusercontent.com/aida-public/AB6AXuAS8UjoKnNYqA105dSxiS44fPG_AmXcWIKeWPDJBeMpIBxTYuBoQPonxkjALXSNzhEpklABUHj7EpMJwa9Smw7kuSVzkURL9pIJ-at1CHwFR5IJ1eL-rVq4b2MAZ0yMrRSGDYapstlC1p2LxdRYCd-2cgTQSJgOuG62PkNl5pUvEku0xClT9snoRfHhthWaN8UNmv8d3NhwAPI3PVDR-ViYfHPg2xE1rIY8CZMz8iUEpmkDmeY8ZKfoq8MlbYtOOJKl1DhAeiykOQ"
+            hero: heroBase64 || ""
         };
 
         custom.unshift(newEssay);
@@ -332,7 +332,7 @@ const cms = {
             custom[idx].content = content;
             custom[idx].char = char || '墨';
             custom[idx].desc = desc;
-            if (heroBase64) custom[idx].hero = heroBase64;
+            custom[idx].hero = heroBase64 || "";
             localStorage.setItem('aesthete_essays', JSON.stringify(custom));
             return syncToServer().then(() => custom[idx]);
         } else {
@@ -346,7 +346,7 @@ const cms = {
                 content: content,
                 char: char || '墨',
                 author: defaultEssay ? defaultEssay.author : this.getProfile().name,
-                hero: heroBase64 || (defaultEssay ? defaultEssay.hero : "https://lh3.googleusercontent.com/aida-public/AB6AXuAS8UjoKnNYqA105dSxiS44fPG_AmXcWIKeWPDJBeMpIBxTYuBoQPonxkjALXSNzhEpklABUHj7EpMJwa9Smw7kuSVzkURL9pIJ-at1CHwFR5IJ1eL-rVq4b2MAZ0yMrRSGDYapstlC1p2LxdRYCd-2cgTQSJgOuG62PkNl5pUvEku0xClT9snoRfHhthWaN8UNmv8d3NhwAPI3PVDR-ViYfHPg2xE1rIY8CZMz8iUEpmkDmeY8ZKfoq8MlbYtOOJKl1DhAeiykOQ")
+                hero: heroBase64 || ""
             };
             custom.unshift(overridden);
             localStorage.setItem('aesthete_essays', JSON.stringify(custom));

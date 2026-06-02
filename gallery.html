@@ -117,13 +117,75 @@
             background-color: #fbf9f4;
             overflow-x: hidden;
         }
+
+        /* --- Push and Expand Styles --- */
+        .page-wrapper {
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform, opacity, filter;
+        }
+
+        body.image-expanded {
+            overflow: hidden;
+        }
+
+        body.image-expanded .page-wrapper {
+            transform: scale(0.96);
+            opacity: 0.4;
+            filter: blur(4px);
+            pointer-events: none;
+        }
+
+        .expanded-image-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0);
+            pointer-events: none;
+            transition: background 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.image-expanded .expanded-image-overlay {
+            background: rgba(251, 249, 244, 0.2); /* Matches surface color with low alpha */
+            pointer-events: auto;
+            cursor: zoom-out;
+        }
+
+        .expanding-image {
+            position: fixed;
+            z-index: 101;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: zoom-in;
+            object-fit: cover;
+            box-shadow: 0 0 0 rgba(0,0,0,0);
+        }
+
+        .expanding-image.active {
+            position: fixed;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) scale(1) !important;
+            width: 85vw !important;
+            height: 85vh !important;
+            object-fit: contain;
+            z-index: 102;
+            cursor: zoom-out;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+
+        .gallery-item {
+            cursor: zoom-in;
+        }
     </style>
 </head>
 <body class="bg-background text-on-surface font-article-body">
 <!-- Subtle Watermark -->
-<div class="watermark fixed top-1/4 -right-12 text-[30rem] font-headline-md text-primary/[0.03] italic leading-none">
+<div class="watermark fixed top-1/4 -right-12 text-[30rem] font-headline-md text-primary italic leading-none" style="opacity: 0.02;">
         艺
     </div>
+<div class="page-wrapper">
 <!-- TopNavBar -->
 <nav class="w-full top-0 left-0 bg-surface dark:bg-surface sticky z-50">
 <div class="flex justify-between items-center w-full px-gutter py-8 max-w-container-max mx-auto">
@@ -216,20 +278,11 @@
 </div>
 </section>
 </main>
-<!-- Footer -->
-<footer class="w-full border-t border-primary/10 bg-surface dark:bg-surface">
-<div class="flex flex-col md:flex-row justify-between items-center w-full px-gutter py-section-gap-sm max-w-container-max mx-auto gap-4">
-<div class="flex flex-col items-center md:items-start gap-2">
-<span class="font-display-lg text-display-lg-mobile text-primary dark:text-on-surface">Aesthete</span>
-<p class="font-caption text-caption text-on-surface-variant dark:text-outline">© 2024 Aesthete. All rights reserved.</p>
-</div>
-<div class="flex items-center gap-8">
-<a class="font-caption text-caption text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-on-surface transition-colors" href="essays.html">Journal</a>
-<a class="font-caption text-caption text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-on-surface transition-colors" href="about.html">Contact</a>
-<a class="font-caption text-caption text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-on-surface transition-colors" href="#">Terms</a>
-</div>
 </div>
 </footer>
+</div>
+<!-- Overlay for expanded image -->
+<div class="expanded-image-overlay" id="ImageOverlay"></div>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const artworks = cms.getArtworks();
@@ -266,6 +319,9 @@
                 </div>
                 `;
             }).join('');
+            
+            // Bind image expansion
+            bindImageExpansion();
         }
 
         // Atmospheric fade-in for images
@@ -287,5 +343,100 @@
             observer.observe(el);
         });
     });
+
+    // --- Dynamic Image Expand Interaction ---
+    function bindImageExpansion() {
+        const imageOverlay = document.getElementById('ImageOverlay');
+        let currentExpandedImg = null;
+
+        // Gallery Parallax effect
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        galleryItems.forEach(item => {
+            item.addEventListener('mousemove', (e) => {
+                const { left, top, width, height } = item.getBoundingClientRect();
+                const x = (e.clientX - left) / width;
+                const y = (e.clientY - top) / height;
+                const img = item.querySelector('img');
+                if (img) img.style.transformOrigin = `${x * 100}% ${y * 100}%`;
+            });
+        });
+
+        galleryItems.forEach(item => {
+            const originalImg = item.querySelector('img');
+            if (!originalImg) return;
+            
+            item.addEventListener('click', (e) => {
+                if (document.body.classList.contains('image-expanded')) return;
+
+                const rect = originalImg.getBoundingClientRect();
+                
+                // Create a clone to animate
+                const expandingImg = originalImg.cloneNode();
+                expandingImg.classList.add('expanding-image');
+                
+                // Set initial position
+                expandingImg.style.width = rect.width + 'px';
+                expandingImg.style.height = rect.height + 'px';
+                expandingImg.style.top = rect.top + 'px';
+                expandingImg.style.left = rect.left + 'px';
+                
+                document.body.appendChild(expandingImg);
+                currentExpandedImg = expandingImg;
+
+                // Trigger "Push away" effect
+                setTimeout(() => {
+                    document.body.classList.add('image-expanded');
+                    expandingImg.classList.add('active');
+                }, 10);
+            });
+        });
+
+        const closeExpansion = () => {
+            if (!currentExpandedImg) return;
+
+            // Find original container to get target rect
+            const originalImg = Array.from(document.querySelectorAll('.gallery-item img')).find(img => img.src === currentExpandedImg.src);
+            if (!originalImg) {
+                currentExpandedImg.remove();
+                currentExpandedImg = null;
+                document.body.classList.remove('image-expanded');
+                return;
+            }
+            const rect = originalImg.getBoundingClientRect();
+
+            // Start reverse transition
+            currentExpandedImg.classList.remove('active');
+            currentExpandedImg.style.width = rect.width + 'px';
+            currentExpandedImg.style.height = rect.height + 'px';
+            currentExpandedImg.style.top = rect.top + 'px';
+            currentExpandedImg.style.left = rect.left + 'px';
+            
+            document.body.classList.remove('image-expanded');
+
+            // Cleanup after transition
+            setTimeout(() => {
+                if (currentExpandedImg) {
+                    currentExpandedImg.remove();
+                    currentExpandedImg = null;
+                }
+            }, 800);
+        };
+
+        if (imageOverlay) {
+            imageOverlay.addEventListener('click', closeExpansion);
+        }
+        
+        // Allow clicking on the expanded image to close as well
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('expanding-image') && e.target.classList.contains('active')) {
+                closeExpansion();
+            }
+        });
+
+        // Accessibility: ESC key to close
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeExpansion();
+        });
+    }
 </script>
 </body></html>

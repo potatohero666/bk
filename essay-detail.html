@@ -165,22 +165,11 @@
 <h1 class="font-display-lg text-display-lg mb-8 leading-tight fade-in" style="transition-delay: 0.4s;">
                 The Silent Dialogue: <br>On the Intersections of Ink and Emptiness
             </h1>
-<div class="flex items-center gap-3 fade-in" style="transition-delay: 0.6s;">
-<div class="w-10 h-10 rounded-full bg-secondary-container overflow-hidden">
-<img alt="Author profile" class="w-full h-full object-cover grayscale opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRQkua2mHNcflP_ytPSS5CwRQcACE52U9ITAEjgOA_LT64UJyIAzKL27BM6WqqYyx8REICHkncLjl_5sBCILHYVASb-UJ4jTRdOiRHPx-Bf_xL0ru4KJipmAA1r8u6lcHIvNJL3NdXwlrPBcLpD3e0-aYbptAyaoX5ofMVn3Qb-IY8CI56bOt_q4JjklC1v9OrJxgQdjDGDvBf8jL3ko_Nxl1aGF1_RU2VcLckfpv92VrfrM66oEart_aacZINjrdT47n8UlNSww">
-</div>
-<div>
-<p class="font-label-sm text-label-sm uppercase tracking-widest text-primary">Aura Vane</p>
-<p class="font-caption text-caption text-outline">Chief Curator</p>
-</div>
-</div>
 </header>
 <!-- Featured Image -->
 <figure class="mb-16 fade-in" style="transition-delay: 0.8s;">
-<img alt="Artistic landscape" class="w-full h-auto aspect-[16/9] object-cover rounded-sm grayscale hover:grayscale-0 transition-all duration-700 cursor-crosshair" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSL9Ry8blZKXXQa8ZhcKD6a9htgyldYEC04kYPDG4l9ezQZhzpqclnUCZquNMyFQNA0fmiUIwYOenUW1eQrRjPBRBqBi4usIzx6aKU0kaNTQ9vwXI1s6pRcnj-S9QouZWl6NPOZV3UgKUt2aXbS732ZJw7qCJ5mOBJbuCaekWMcwcrqYyfn-tagYk5vyodO9vzy7yVIpvHxPu_oE4ntTk_IkVfhxuFoUvKCfqSvt24dfUN0QxBnwPacxY9SeroQYC0nQtNaaUp0A">
-<figcaption class="mt-4 font-label-sm text-label-sm italic text-outline text-center">
-                "Observation of void," Study in traditional Sumi-e techniques, 2024.
-            </figcaption>
+<img alt="Artistic landscape" class="w-full h-auto aspect-[16/9] object-cover rounded-sm grayscale hover:grayscale-0 transition-all duration-700 cursor-crosshair" src="">
+<figcaption class="mt-4 font-label-sm text-label-sm italic text-outline text-center"></figcaption>
 </figure>
 <!-- Body Text -->
 <div class="font-article-body text-article-body space-y-8 fade-in" style="transition-delay: 1.0s;">
@@ -266,13 +255,22 @@
         const charEl = document.querySelector('.bg-drift');
         if (charEl) charEl.innerText = essay.char || '墨';
 
-        const authorEl = document.querySelector('.font-label-sm.text-primary');
-        if (authorEl) authorEl.innerText = essay.author || 'Aura Vane';
-
-        const imgEl = document.querySelector('figure img');
-        if (imgEl) {
-            imgEl.src = essay.hero;
-            imgEl.alt = essay.title;
+        const figureEl = document.querySelector('figure');
+        if (figureEl) {
+            if (essay.hero) {
+                const imgEl = figureEl.querySelector('img');
+                if (imgEl) {
+                    imgEl.src = essay.hero;
+                    imgEl.alt = essay.title;
+                }
+                const figcaptionEl = figureEl.querySelector('figcaption');
+                if (figcaptionEl) {
+                    figcaptionEl.innerText = essay.title;
+                }
+                figureEl.style.display = 'block';
+            } else {
+                figureEl.style.display = 'none';
+            }
         }
 
         // Render Markdown content (robust paragraph and linebreak splitting)
