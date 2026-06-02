@@ -8,6 +8,7 @@
   "assets": {
     "directory": "."
   },
+  "main": "worker.js",
   "compatibility_flags": [
     "nodejs_compat"
   ],

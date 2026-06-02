@@ -48,6 +48,17 @@ function saveDatabase(data) {
     fs.renameSync(tempFile, DB_FILE);
 }
 
+// API Load Route: Retrieve the database payload
+app.get('/api/data', (req, res) => {
+    try {
+        const dbData = getDatabase();
+        res.json(dbData);
+    } catch (err) {
+        console.error("Error reading database:", err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 // API Save Route: Save the full database payload in one call
 app.post('/api/save', (req, res) => {
     try {
